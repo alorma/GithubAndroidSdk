@@ -12,6 +12,7 @@ public class GitskariosSettings extends PreferencesHelper {
     public static final String KEY_VERSION = "KEY_VERSION";
     public static final String KEY_AUTH_USER_JSON = "KEY_AUTH_USER_JSON";
     public static final String KEY_DOWNLOAD_FILE_TYPE = "KEY_DOWNLOAD_FILE_TYPE";
+    private static final String PREF_INTERCEPT = "pref_intercept";
 
     public GitskariosSettings(Context context) {
         super(context);
@@ -63,5 +64,13 @@ public class GitskariosSettings extends PreferencesHelper {
         saveBooleanSetting(KEY_ISSUE_EDIT, false);
 
         return result;
+    }
+
+    public boolean interceptState(boolean value) {
+        return getBooleanSetting(PREF_INTERCEPT, value);
+    }
+
+    public void saveInterceptState(boolean value) {
+        saveBooleanSetting(PREF_INTERCEPT, value);
     }
 }
