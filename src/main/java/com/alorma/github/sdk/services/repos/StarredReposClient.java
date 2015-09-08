@@ -11,10 +11,6 @@ import java.util.List;
  */
 public class StarredReposClient extends GithubReposClient {
 
-	public StarredReposClient(Context context) {
-		super(context);
-	}
-
 	public StarredReposClient(Context context, String username) {
 		super(context, username);
 	}
