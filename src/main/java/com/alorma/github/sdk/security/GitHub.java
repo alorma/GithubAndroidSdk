@@ -1,11 +1,11 @@
 package com.alorma.github.sdk.security;
 
-import com.alorma.gitskarios.core.ApiClient;
+import com.alorma.gitskarios.core.ApiConnection;
 
 /**
  * Created by Bernat on 08/07/2014.
  */
-public class GitHub implements ApiClient {
+public class GitHub implements ApiConnection {
 
     public GitHub() {
         if (GithubDeveloperCredentials.getInstance().getProvider() == null) {
