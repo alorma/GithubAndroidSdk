@@ -8,9 +8,7 @@ import com.alorma.gitskarios.core.ApiConnection;
 public class GitHub implements ApiConnection {
 
     public GitHub() {
-        if (GithubDeveloperCredentials.getInstance().getProvider() == null) {
-            throw new IllegalArgumentException("Credentials provider cannot be null");
-        }
+
     }
 
     @Override
