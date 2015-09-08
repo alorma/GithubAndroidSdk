@@ -19,6 +19,11 @@ public class GitHub implements ApiConnection {
     }
 
     @Override
+    public String getApiOauthRequest() {
+        return "https://github.com/login/oauth/authorize";
+    }
+
+    @Override
     public String getApiEndpoint() {
         return "https://api.github.com";
     }
