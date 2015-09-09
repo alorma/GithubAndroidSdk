@@ -1,11 +1,16 @@
 package com.alorma.github.sdk.security;
 
+import android.net.Uri;
+
 import com.alorma.gitskarios.core.ApiConnection;
+import com.alorma.gitskarios.core.GitskariosDeveloperCredentials;
 
 /**
  * Created by Bernat on 08/07/2014.
  */
 public class GitHub implements ApiConnection {
+
+    private static final String SCOPES = "gist,user,notifications,repo,delete_repo";
 
     public GitHub() {
 
@@ -31,4 +36,12 @@ public class GitHub implements ApiConnection {
         return "github";
     }
 
+    @Override
+    public Uri buildUri(Uri callbackUri) {
+        String url = String.format("%s?client_id=%s&scope=" + SCOPES,
+                getApiOauthRequest(),
+                GitskariosDeveloperCredentials.getInstance().getProvider(this).getApiClient());
+        return Uri.parse(url).buildUpon().appendQueryParameter("redirect_uri", callbackUri.toString())
+                .build();
+    }
 }

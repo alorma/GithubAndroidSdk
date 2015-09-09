@@ -5,8 +5,8 @@ import android.support.annotation.NonNull;
 
 import com.alorma.github.sdk.security.GitHub;
 import com.alorma.gitskarios.core.GitskariosDeveloperCredentials;
-import com.alorma.github.sdk.bean.dto.request.RequestTokenDTO;
-import com.alorma.github.sdk.bean.dto.response.Token;
+import com.alorma.gitskarios.core.bean.dto.request.RequestTokenDTO;
+import com.alorma.gitskarios.core.Token;
 import com.alorma.github.sdk.services.client.GithubClient;
 
 import retrofit.RestAdapter;
