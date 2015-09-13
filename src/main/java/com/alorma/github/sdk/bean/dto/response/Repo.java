@@ -1,6 +1,5 @@
 package com.alorma.github.sdk.bean.dto.response;
 
-import android.os.BadParcelableException;
 import android.os.Parcel;
 import android.os.Parcelable;
 
