@@ -14,6 +14,7 @@ public class RepoInfo implements Parcelable {
 	public String name;
 	public String branch;
 	public Permissions permissions = new Permissions();
+	public int repo_id;
 
 	public RepoInfo() {
 	}
@@ -23,6 +24,7 @@ public class RepoInfo implements Parcelable {
 		name = in.readString();
 		branch = in.readString();
 		permissions = in.readParcelable(Permissions.class.getClassLoader());
+		repo_id = in.readInt();
 	}
 
 	@Override
@@ -36,6 +38,7 @@ public class RepoInfo implements Parcelable {
 		dest.writeString(name);
 		dest.writeString(branch);
 		dest.writeParcelable(permissions, flags);
+		dest.writeInt(repo_id);
 	}
 
 	@SuppressWarnings("unused")
