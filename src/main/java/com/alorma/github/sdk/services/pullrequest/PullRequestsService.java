@@ -25,10 +25,10 @@ import retrofit.http.Query;
 public interface PullRequestsService {
 
     //Async
-    @GET("/repos/{owner}/{name}/pulls?sort=updated")
+    @GET("/repos/{owner}/{name}/pulls")
     void pulls(@Path("owner") String owner, @Path("name") String repo, @Query("state") String state, Callback<List<PullRequest>> callback);
 
-    @GET("/repos/{owner}/{name}/pulls?sort=updated")
+    @GET("/repos/{owner}/{name}/pulls")
     void pulls(@Path("owner") String owner, @Path("name") String repo, @Query("state") String state, @Query("page") int page, Callback<List<PullRequest>> callback);
 
     @GET("/repos/{owner}/{name}/pulls/{number}")
@@ -56,10 +56,10 @@ public interface PullRequestsService {
     void reviewComments(@Path("owner") String owner, @Path("repo") String repo, @Path("number") int number, @Query("page") int page, Callback<List<ReviewComment>> callback);
 
     //Sync
-    @GET("/repos/{owner}/{name}/pulls?sort=updated")
+    @GET("/repos/{owner}/{name}/pulls")
     List<PullRequest> pulls(@Path("owner") String owner, @Path("name") String repo, @Query("state") String state);
 
-    @GET("/repos/{owner}/{name}/pulls?sort=updated")
+    @GET("/repos/{owner}/{name}/pulls")
     List<PullRequest> pulls(@Path("owner") String owner, @Path("name") String repo, @Query("state") String state, @Query("page") int page);
 
     @GET("/repos/{owner}/{name}/pulls/{number}")

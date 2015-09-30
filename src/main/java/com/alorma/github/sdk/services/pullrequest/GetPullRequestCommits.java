@@ -2,17 +2,14 @@ package com.alorma.github.sdk.services.pullrequest;
 
 import android.content.Context;
 
-import com.alorma.github.basesdk.client.BaseClient;
+import com.alorma.gitskarios.core.client.BaseClient;
 import com.alorma.github.sdk.bean.dto.response.Commit;
-import com.alorma.github.sdk.bean.dto.response.Milestone;
 import com.alorma.github.sdk.bean.info.IssueInfo;
 import com.alorma.github.sdk.services.client.GithubClient;
-import com.alorma.github.sdk.services.issues.IssuesService;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import retrofit.Callback;
 import retrofit.RestAdapter;
 
 /**

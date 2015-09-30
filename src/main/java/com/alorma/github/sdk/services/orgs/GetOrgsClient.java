@@ -2,7 +2,7 @@ package com.alorma.github.sdk.services.orgs;
 
 import android.content.Context;
 
-import com.alorma.github.basesdk.client.StoreCredentials;
+import com.alorma.gitskarios.core.client.StoreCredentials;
 import com.alorma.github.sdk.bean.dto.response.Organization;
 import com.alorma.github.sdk.services.client.GithubClient;
 

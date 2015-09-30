@@ -8,6 +8,7 @@ import java.util.List;
 import retrofit.Callback;
 import retrofit.client.Response;
 import retrofit.http.Body;
+import retrofit.http.DELETE;
 import retrofit.http.GET;
 import retrofit.http.PATCH;
 import retrofit.http.PUT;
@@ -23,31 +24,37 @@ public interface NotificationsService {
 	@GET("/notifications")
 	void getNotifications(Callback<List<Notification>> notifications);
 	
-	@PUT("/repos/{owner}/{repoInfo}/notifications")
-	void markAsReadRepo(@Path("owner") String owner, @Path("repoInfo") String repo, @Body LastDate body, Callback<Response> responseCallback);
-	
+	@PUT("/repos/{owner}/{name}/notifications")
+	void markAsReadRepo(@Path("owner") String owner, @Path("name") String repo, Callback<Response> responseCallback);
+
+	@PUT("/repos/{owner}/{name}/notifications")
+	void markAsReadRepo(@Path("owner") String owner, @Path("name") String repo, @Body LastDate body, Callback<Response> responseCallback);
+
 	@PATCH("/notifications/threads/{id}")
-	void markThreadAsRead(@Path("id") String id, Callback<Response> callback);
+	void markThreadAsRead(@Path("id") String id, @Body Object empty, Callback<Response> callback);
 
 	@PUT("/notifications/threads/{id}/subscription")
 	void subscribeThread(@Path("id") String id, @Query("subscribed") boolean subscribed, @Query("ignored") boolean ignored, Callback<Response> callback);
 
-	@PATCH("/notifications/threads/{id}/subscription")
+	@DELETE("/notifications/threads/{id}/subscription")
 	void unsubscribeThread(@Path("id") String id, Callback<Response> callback);
 
 	//Sync
 	@GET("/notifications")
 	List<Notification> getNotifications();
 
-	@PUT("/repos/{owner}/{repoInfo}/notifications")
-	Response markAsReadRepo(@Path("owner") String owner, @Path("repoInfo") String repo, @Body LastDate body);
+	@PUT("/repos/{owner}/{name}/notifications")
+	Response markAsReadRepo(@Path("owner") String owner, @Path("name") String repo);
+
+	@PUT("/repos/{owner}/{name}/notifications")
+	Response markAsReadRepo(@Path("owner") String owner, @Path("name") String repo, @Body LastDate body);
 
 	@PATCH("/notifications/threads/{id}")
-	Response markThreadAsRead(@Path("id") String id);
+	Response markThreadAsRead(@Path("id") String id, @Body Object empty);
 
 	@PUT("/notifications/threads/{id}/subscription")
 	Response subscribeThread(@Path("id") String id, @Query("subscribed") boolean subscribed, @Query("ignored") boolean ignored);
 
-	@PATCH("/notifications/threads/{id}/subscription")
+	@DELETE("/notifications/threads/{id}/subscription")
 	Response unsubscribeThread(@Path("id") String id);
 }

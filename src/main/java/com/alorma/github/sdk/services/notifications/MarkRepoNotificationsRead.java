@@ -27,7 +27,7 @@ public class MarkRepoNotificationsRead extends GithubClient<Response> {
 	@Override
 	protected void executeService(RestAdapter restAdapter) {
 		DateTime dateTime = DateTime.now().withZone(DateTimeZone.UTC);
-		String date = ISODateTimeFormat.date().print(dateTime);
+		String date = ISODateTimeFormat.dateTime().print(dateTime);
 		LastDate lastDate = new LastDate(date);
 		restAdapter.create(NotificationsService.class).markAsReadRepo(repoInfo.owner, repoInfo.name, lastDate, this);
 	}
@@ -35,7 +35,7 @@ public class MarkRepoNotificationsRead extends GithubClient<Response> {
 	@Override
 	protected Response executeServiceSync(RestAdapter restAdapter) {
 		DateTime dateTime = DateTime.now().withZone(DateTimeZone.UTC);
-		String date = ISODateTimeFormat.date().print(dateTime);
+		String date = ISODateTimeFormat.dateTime().print(dateTime);
 		LastDate lastDate = new LastDate(date);
 		return restAdapter.create(NotificationsService.class).markAsReadRepo(repoInfo.owner, repoInfo.name, lastDate);
 	}
