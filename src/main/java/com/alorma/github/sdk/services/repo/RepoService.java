@@ -6,6 +6,7 @@ import com.alorma.github.sdk.bean.dto.response.CompareCommit;
 import com.alorma.github.sdk.bean.dto.response.Content;
 import com.alorma.github.sdk.bean.dto.response.Contributor;
 import com.alorma.github.sdk.bean.dto.response.GithubEvent;
+import com.alorma.github.sdk.bean.dto.response.GithubStatusResponse;
 import com.alorma.github.sdk.bean.dto.response.Label;
 import com.alorma.github.sdk.bean.dto.response.Milestone;
 import com.alorma.github.sdk.bean.dto.response.MilestoneState;
@@ -20,6 +21,7 @@ import retrofit.client.Response;
 import retrofit.http.Body;
 import retrofit.http.DELETE;
 import retrofit.http.GET;
+import retrofit.http.Headers;
 import retrofit.http.PATCH;
 import retrofit.http.Path;
 import retrofit.http.Query;
@@ -90,6 +92,18 @@ public interface RepoService {
     @GET("/repos/{owner}/{name}/events")
     void events(@Path("owner") String owner, @Path("name") String repo, @Query("page") int page, Callback<List<GithubEvent>> eventsCallback);
 
+    @GET("/repos/{owner}/{name}/forks")
+    void listForks(@Path("owner") String owner, @Path("name") String repo, @Query("sort") String sort, Callback<List<Repo>> callback);
+
+    @GET("/repos/{owner}/{name}/forks")
+    void listForks(@Path("owner") String owner, @Path("name") String repo, @Query("sort") String sort, @Query("page") int page, Callback<List<Repo>> callback);
+
+    @GET("/repos/{owner}/{name}/commits/{ref}/status")
+    void combinedStatus(@Path("owner") String owner, @Path("name") String repo, @Path("ref") String ref, Callback<GithubStatusResponse> callback);
+
+    @GET("/repos/{owner}/{name}/commits/{ref}/status")
+    void combinedStatus(@Path("owner") String owner, @Path("name") String repo, @Path("ref") String ref, @Query("page") int page, Callback<GithubStatusResponse> callback);
+
     //Sync
     @GET("/repos/{owner}/{name}")
     Repo get(@Path("owner") String owner, @Path("name") String repo);
@@ -150,5 +164,17 @@ public interface RepoService {
 
     @GET("/repos/{owner}/{name}/events")
     List<GithubEvent> events(@Path("owner") String owner, @Path("name") String repo, @Query("page") int page);
+
+    @GET("/repos/{owner}/{name}/forks")
+    List<Repo> listForks(@Path("owner") String owner, @Path("name") String repo, @Query("sort") String sort);
+
+    @GET("/repos/{owner}/{name}/forks")
+    List<Repo> listForks(@Path("owner") String owner, @Path("name") String repo, @Query("sort") String sort, @Query("page") int page);
+
+    @GET("/repos/{owner}/{name}/commits/{ref}/status")
+    GithubStatusResponse combinedStatus(@Path("owner") String owner, @Path("name") String repo, @Path("ref") String ref);
+
+    @GET("/repos/{owner}/{name}/commits/{ref}/status")
+    GithubStatusResponse combinedStatus(@Path("owner") String owner, @Path("name") String repo, @Path("ref") String ref, @Query("page") int page);
 
 }

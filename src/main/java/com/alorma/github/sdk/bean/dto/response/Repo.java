@@ -58,6 +58,10 @@ public class Repo extends ShaUrl {
 
 	public int stargazers_count;
 
+	public int subscribers_count;
+
+	public int network_count;
+
 	public int watchers_count;
 
 	public int size;
@@ -101,6 +105,8 @@ public class Repo extends ShaUrl {
 		sb.append(", url='").append(url).append('\'');
 		sb.append(", owner=").append(owner);
 		sb.append(", stargazers_count=").append(stargazers_count);
+		sb.append(", subscribers_count=").append(subscribers_count);
+		sb.append(", subscribers_count=").append(network_count);
 		sb.append(", watchers_count=").append(watchers_count);
 		sb.append(", size=").append(size);
 		sb.append(", open_issues_count=").append(open_issues_count);
@@ -156,6 +162,8 @@ public class Repo extends ShaUrl {
 		url = in.readString();
 		owner = in.readParcelable(User.class.getClassLoader());
 		stargazers_count = in.readInt();
+		subscribers_count = in.readInt();
+		network_count = in.readInt();
 		watchers_count = in.readInt();
 		size = in.readInt();
 		open_issues_count = in.readInt();
@@ -197,6 +205,8 @@ public class Repo extends ShaUrl {
 		dest.writeString(url);
 		dest.writeParcelable(owner, flags);
 		dest.writeInt(stargazers_count);
+		dest.writeInt(subscribers_count);
+		dest.writeInt(network_count);
 		dest.writeInt(watchers_count);
 		dest.writeInt(size);
 		dest.writeInt(open_issues_count);

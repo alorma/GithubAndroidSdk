@@ -6,9 +6,11 @@ import android.util.Log;
 import com.alorma.github.sdk.PullRequest;
 import com.alorma.github.sdk.bean.dto.response.Commit;
 import com.alorma.github.sdk.bean.dto.response.GithubComment;
+import com.alorma.github.sdk.bean.dto.response.GithubStatusResponse;
 import com.alorma.github.sdk.bean.dto.response.Label;
 import com.alorma.github.sdk.bean.dto.response.ReviewComment;
 import com.alorma.github.sdk.bean.info.IssueInfo;
+import com.alorma.github.sdk.bean.info.RepoInfo;
 import com.alorma.github.sdk.bean.issue.IssueEvent;
 import com.alorma.github.sdk.bean.issue.IssueStoryComment;
 import com.alorma.github.sdk.bean.issue.IssueStoryReviewComment;
@@ -23,6 +25,7 @@ import com.alorma.github.sdk.bean.issue.PullRequestStory;
 import com.alorma.github.sdk.services.client.GithubClient;
 import com.alorma.github.sdk.services.issues.story.IssueStoryService;
 import com.alorma.github.sdk.services.pullrequest.PullRequestsService;
+import com.alorma.github.sdk.services.repo.GetShaCombinedStatus;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -34,7 +37,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import retrofit.Callback;
 import retrofit.RestAdapter;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * Created by Bernat on 07/04/2015.
@@ -134,7 +140,7 @@ public class PullRequestStoryLoader extends GithubClient<PullRequestStory> {
 
         @Override
         protected void executeNext() {
-            new LabelsCallback(issueInfo, issueStoryService, pullRequestsService).execute();
+            new StatusCallback(issueInfo, issueStoryService, pullRequestsService).execute();
         }
 
         @Override
@@ -142,7 +148,39 @@ public class PullRequestStoryLoader extends GithubClient<PullRequestStory> {
             pullRequestStory.pullRequest = pullRequest;
             pullRequestStory.pullRequest.labels = new ArrayList<>();
         }
+    }
 
+    private class StatusCallback implements OnResultCallback<GithubStatusResponse> {
+
+        private final IssueInfo info;
+        private final IssueStoryService issueStoryService;
+        private final PullRequestsService pullRequestsService;
+
+        public StatusCallback(IssueInfo info,
+                              IssueStoryService issueStoryService,
+                              PullRequestsService pullRequestsService) {
+            this.info = info;
+            this.issueStoryService = issueStoryService;
+            this.pullRequestsService = pullRequestsService;
+        }
+
+        public void execute() {
+            String branch = pullRequestStory.pullRequest.head.ref;
+            GetShaCombinedStatus status = new GetShaCombinedStatus(getContext(), info.repoInfo, branch);
+            status.setOnResultCallback(this);
+            status.execute();
+        }
+
+        @Override
+        public void onResponseOk(GithubStatusResponse githubStatusResponse, Response r) {
+            pullRequestStory.statusResponse = githubStatusResponse;
+            new LabelsCallback(issueInfo, issueStoryService, pullRequestsService).execute();
+        }
+
+        @Override
+        public void onFail(RetrofitError error) {
+            new LabelsCallback(issueInfo, issueStoryService, pullRequestsService).execute();
+        }
     }
 
     private class LabelsCallback extends BaseInfiniteCallback<List<Label>> {
@@ -241,7 +279,7 @@ public class PullRequestStoryLoader extends GithubClient<PullRequestStory> {
 
         @Override
         protected void executeNext() {
-           parseIssueStoryDetails();
+            parseIssueStoryDetails();
         }
 
         @Override
@@ -250,7 +288,7 @@ public class PullRequestStoryLoader extends GithubClient<PullRequestStory> {
         }
     }
 
-    private void addEvents(List<IssueEvent> issueEvents){
+    private void addEvents(List<IssueEvent> issueEvents) {
         List<IssueStoryDetail> details = new ArrayList<>();
 
         Map<Long, IssueStoryLabelList> labeledEvents = new HashMap<>();
@@ -296,7 +334,7 @@ public class PullRequestStoryLoader extends GithubClient<PullRequestStory> {
         storyDetailMap.addAll(details);
     }
 
-    private void addComments(List<GithubComment> issueComments){
+    private void addComments(List<GithubComment> issueComments) {
         for (GithubComment comment : issueComments) {
             long time = getMilisFromDateClearDay(comment.created_at);
             IssueStoryComment detail = new IssueStoryComment(comment);
