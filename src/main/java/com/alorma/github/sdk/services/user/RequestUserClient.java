@@ -3,6 +3,11 @@ package com.alorma.github.sdk.services.user;
 import android.content.Context;
 
 import com.alorma.github.sdk.bean.dto.response.User;
+import com.alorma.gitskarios.core.bean.dto.GitskariosUser;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * Created by Bernat on 12/07/2014.

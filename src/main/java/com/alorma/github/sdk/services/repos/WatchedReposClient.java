@@ -11,10 +11,6 @@ import java.util.List;
  */
 public class WatchedReposClient extends GithubReposClient {
 
-	public WatchedReposClient(Context context) {
-		super(context);
-	}
-
 	public WatchedReposClient(Context context, String username) {
 		super(context, username);
 	}

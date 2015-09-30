@@ -1,13 +1,16 @@
 package com.alorma.github.sdk.services.client;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.alorma.github.basesdk.client.BaseClient;
+import com.alorma.gitskarios.core.client.BaseClient;
 import com.alorma.github.sdk.bean.info.PaginationLink;
 import com.alorma.github.sdk.bean.info.RelType;
 
 import com.alorma.github.sdk.security.GitHub;
+import com.alorma.github.sdk.security.InterceptingOkClient;
+import com.squareup.okhttp.OkHttpClient;
 
 import java.util.HashMap;
 import java.util.List;
@@ -94,6 +97,11 @@ public abstract class GithubClient<K>  extends BaseClient<K> {
 				getOnResultCallback().onFail(error);
 			}
 		}
+	}
 
+	@Nullable
+	@Override
+	protected InterceptingOkClient getInterceptor() {
+		return new InterceptingOkClient(new OkHttpClient(), this);
 	}
 }

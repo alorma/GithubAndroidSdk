@@ -2,7 +2,7 @@ package com.alorma.github.sdk.services.repo.actions;
 
 import android.content.Context;
 
-import com.alorma.github.basesdk.client.BaseClient;
+import com.alorma.gitskarios.core.client.BaseClient;
 import com.alorma.github.sdk.services.client.GithubClient;
 
 import retrofit.RestAdapter;

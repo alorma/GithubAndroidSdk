@@ -1,10 +1,12 @@
 package com.alorma.github.sdk.services.login;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
-import com.alorma.github.basesdk.client.credentials.GithubDeveloperCredentials;
-import com.alorma.github.sdk.bean.dto.request.RequestTokenDTO;
-import com.alorma.github.sdk.bean.dto.response.Token;
+import com.alorma.github.sdk.security.GitHub;
+import com.alorma.gitskarios.core.GitskariosDeveloperCredentials;
+import com.alorma.gitskarios.core.bean.dto.request.RequestTokenDTO;
+import com.alorma.gitskarios.core.Token;
 import com.alorma.github.sdk.services.client.GithubClient;
 
 import retrofit.RestAdapter;
@@ -42,12 +44,17 @@ public class RequestTokenClient extends GithubClient<Token> {
 
 
         RequestTokenDTO tokenDTO = new RequestTokenDTO();
-        tokenDTO.client_id = GithubDeveloperCredentials.getInstance().getProvider().getApiClient();
-        tokenDTO.client_secret = GithubDeveloperCredentials.getInstance().getProvider().getAPiSecret();
-        tokenDTO.redirect_uri = GithubDeveloperCredentials.getInstance().getProvider().getApiOauth();
+        tokenDTO.client_id = GitskariosDeveloperCredentials.getInstance().getProvider(getConnection()).getApiClient();
+        tokenDTO.client_secret = GitskariosDeveloperCredentials.getInstance().getProvider(getConnection()).getAPiSecret();
+        tokenDTO.redirect_uri = GitskariosDeveloperCredentials.getInstance().getProvider(getConnection()).getApiOauth();
         tokenDTO.code = code;
 
         loginService.requestToken(tokenDTO, this);
+    }
+
+    @NonNull
+    private GitHub getConnection() {
+        return new GitHub();
     }
 
     @Override
@@ -56,9 +63,9 @@ public class RequestTokenClient extends GithubClient<Token> {
 
 
         RequestTokenDTO tokenDTO = new RequestTokenDTO();
-        tokenDTO.client_id = GithubDeveloperCredentials.getInstance().getProvider().getApiClient();
-        tokenDTO.client_secret = GithubDeveloperCredentials.getInstance().getProvider().getAPiSecret();
-        tokenDTO.redirect_uri = GithubDeveloperCredentials.getInstance().getProvider().getApiOauth();
+        tokenDTO.client_id = GitskariosDeveloperCredentials.getInstance().getProvider(getConnection()).getApiClient();
+        tokenDTO.client_secret = GitskariosDeveloperCredentials.getInstance().getProvider(getConnection()).getAPiSecret();
+        tokenDTO.redirect_uri = GitskariosDeveloperCredentials.getInstance().getProvider(getConnection()).getApiOauth();
         tokenDTO.code = code;
 
         return loginService.requestToken(tokenDTO);

@@ -7,6 +7,7 @@ import android.content.Context;
  */
 public class GitskariosSettings extends PreferencesHelper {
     public static final String KEY_REPO_SORT = "KEY_REPO_SORT";
+    public static final String KEY_MARK_AS_READ = "KEY_MARK_AS_READ";
     public static final String KEY_ISSUE_EDIT = "KEY_ISSUE_EDIT";
     public static final String KEY_AUTH_USER = "KEY_AUTH_USER";
     public static final String KEY_VERSION = "KEY_VERSION";
@@ -63,5 +64,13 @@ public class GitskariosSettings extends PreferencesHelper {
         saveBooleanSetting(KEY_ISSUE_EDIT, false);
 
         return result;
+    }
+
+    public void saveMarkAsRead(boolean value) {
+        saveBooleanSetting(KEY_MARK_AS_READ, value);
+    }
+
+    public boolean markAsRead() {
+        return getBooleanSetting(KEY_MARK_AS_READ, false);
     }
 }
