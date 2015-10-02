@@ -18,7 +18,7 @@ public class Notification extends ShaUrl implements Comparable<Notification>{
 	public String updated_at;
 	public String last_read_at;
 	
-	public int adapter_repo_parent_id;
+	public Long adapter_repo_parent_id;
 
 	@Override
 	public int compareTo(Notification another) {

@@ -1,6 +1,6 @@
-package com.alorma.github.basesdk.client.credentials;
+package com.alorma.github.sdk.security;
 
-import com.alorma.github.basesdk.client.GithubDeveloperCredentialsProvider;
+import com.alorma.gitskarios.core.client.credentials.DeveloperCredentialsProvider;
 
 /**
  * Created by Bernat on 07/07/2015.
@@ -8,9 +8,9 @@ import com.alorma.github.basesdk.client.GithubDeveloperCredentialsProvider;
 public class GithubDeveloperCredentials {
 
     private static GithubDeveloperCredentials githubDeveloperCredentials;
-    private GithubDeveloperCredentialsProvider provider;
+    private DeveloperCredentialsProvider provider;
 
-    public static void init(GithubDeveloperCredentialsProvider provider) {
+    public static void init(DeveloperCredentialsProvider provider) {
         getInstance().provider = provider;
     }
 
@@ -25,7 +25,7 @@ public class GithubDeveloperCredentials {
 
     }
 
-    public GithubDeveloperCredentialsProvider getProvider() {
+    public DeveloperCredentialsProvider getProvider() {
         return provider;
     }
 }

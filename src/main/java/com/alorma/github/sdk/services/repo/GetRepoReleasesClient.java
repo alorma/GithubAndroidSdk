@@ -13,11 +13,11 @@ import retrofit.RestAdapter;
 /**
  * Created by a557114 on 29/07/2015.
  */
-public class RepoReleaseClient extends GithubClient<List<Release>> {
+public class GetRepoReleasesClient extends GithubClient<List<Release>> {
     private RepoInfo info;
     private int page;
 
-    public RepoReleaseClient(Context context, RepoInfo info, int page) {
+    public GetRepoReleasesClient(Context context, RepoInfo info, int page) {
         super(context);
         this.info = info;
         this.page = page;

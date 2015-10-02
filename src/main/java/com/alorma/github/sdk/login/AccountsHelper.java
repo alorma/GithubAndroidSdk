@@ -10,7 +10,7 @@ import android.os.Bundle;
  */
 public class AccountsHelper {
     private static final String ACCOUNT_SCOPES = "ACCOUNT_SCOPES";
-    private static final String USER_PIC = "USER_PIC";
+    public static final String USER_PIC = "USER_PIC";
     private static final String USER_MAIL = "USER_MAIL";
     private static final String USER_NAME = "USER_NAME";
 

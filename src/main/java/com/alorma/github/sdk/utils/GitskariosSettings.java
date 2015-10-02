@@ -7,10 +7,9 @@ import android.content.Context;
  */
 public class GitskariosSettings extends PreferencesHelper {
     public static final String KEY_REPO_SORT = "KEY_REPO_SORT";
+    public static final String KEY_MARK_AS_READ = "KEY_MARK_AS_READ";
     public static final String KEY_ISSUE_EDIT = "KEY_ISSUE_EDIT";
-    public static final String KEY_AUTH_USER = "KEY_AUTH_USER";
     public static final String KEY_VERSION = "KEY_VERSION";
-    public static final String KEY_AUTH_USER_JSON = "KEY_AUTH_USER_JSON";
     public static final String KEY_DOWNLOAD_FILE_TYPE = "KEY_DOWNLOAD_FILE_TYPE";
 
     public GitskariosSettings(Context context) {
@@ -23,22 +22,6 @@ public class GitskariosSettings extends PreferencesHelper {
 
     public String getRepoSort(String defaultValue) {
         return getStringSetting(KEY_REPO_SORT, defaultValue);
-    }
-
-    public void saveAuthUser(String value) {
-        saveStringSetting(KEY_AUTH_USER, value);
-    }
-
-    public String getAuthUser(String defaultValue) {
-        return getStringSetting(KEY_AUTH_USER, defaultValue);
-    }
-
-    public void saveAuthUserJson(String value) {
-        saveStringSetting(KEY_AUTH_USER_JSON, value);
-    }
-
-    public String getAuthUserJson() {
-        return getStringSetting(KEY_AUTH_USER_JSON, null);
     }
 
     public String getDownloadFileType(String defaultType) {
@@ -63,5 +46,13 @@ public class GitskariosSettings extends PreferencesHelper {
         saveBooleanSetting(KEY_ISSUE_EDIT, false);
 
         return result;
+    }
+
+    public void saveMarkAsRead(boolean value) {
+        saveBooleanSetting(KEY_MARK_AS_READ, value);
+    }
+
+    public boolean markAsRead() {
+        return getBooleanSetting(KEY_MARK_AS_READ, false);
     }
 }

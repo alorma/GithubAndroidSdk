@@ -1,6 +1,7 @@
 package com.alorma.github.sdk.bean.dto.response;
 
 import com.alorma.github.sdk.bean.dto.response.events.EventType;
+import com.alorma.github.sdk.bean.dto.response.events.payload.Payload;
 import com.google.gson.annotations.SerializedName;
 
 /**
@@ -13,7 +14,7 @@ public class GithubEvent {
 	public User actor;
 	public User org;
 	public Repo repo;
-	public Object payload;
+	public Payload payload;
 
 	@SerializedName("public")
 	public boolean public_event;
