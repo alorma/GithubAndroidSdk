@@ -1,14 +1,13 @@
 package com.alorma.github.sdk.security;
 
-import com.alorma.github.basesdk.ApiClient;
-import com.alorma.github.basesdk.client.credentials.GithubDeveloperCredentials;
+import com.alorma.gitskarios.core.ApiClient;
 
 /**
  * Created by Bernat on 08/07/2014.
  */
 public class GitHub implements ApiClient {
 
-    public GitHub(){
+    public GitHub() {
         if (GithubDeveloperCredentials.getInstance().getProvider() == null) {
             throw new IllegalArgumentException("Credentials provider cannot be null");
         }

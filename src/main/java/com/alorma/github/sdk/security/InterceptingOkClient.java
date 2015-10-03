@@ -1,11 +1,11 @@
-package com.alorma.github.basesdk.client;
+package com.alorma.github.sdk.security;
 
 import com.alorma.github.sdk.bean.info.PaginationLink;
 import com.alorma.github.sdk.bean.info.RelType;
+import com.alorma.gitskarios.core.client.BaseClient;
 import com.squareup.okhttp.OkHttpClient;
 
 import java.io.IOException;
-import java.util.Objects;
 
 import retrofit.client.Header;
 import retrofit.client.OkClient;
@@ -14,14 +14,11 @@ import retrofit.client.Response;
 
 public class InterceptingOkClient extends OkClient {
 
-    private BaseClient githubClient;
+    private BaseClient baseClient;
 
-    public InterceptingOkClient(BaseClient client) {
-        this.githubClient = client;
-    }
-
-    public InterceptingOkClient(OkHttpClient client) {
+    public InterceptingOkClient(OkHttpClient client, BaseClient baseClient) {
         super(client);
+        this.baseClient = baseClient;
     }
 
     @Override
@@ -34,15 +31,12 @@ public class InterceptingOkClient extends OkClient {
                     String[] parts = header.getValue().split(",");
                     for (String part : parts) {
                         PaginationLink bottomPaginationLink = new PaginationLink(part);
-                        switch (bottomPaginationLink.rel){
-                            case last:
-                                githubClient.last = bottomPaginationLink.uri;
-                                githubClient.lastPage = bottomPaginationLink.page;
-                                break;
-                            case next:
-                                githubClient.next = bottomPaginationLink.uri;
-                                githubClient.nextPage = bottomPaginationLink.page;
-                                break;
+                        if (bottomPaginationLink.rel == RelType.last) {
+                            baseClient.last = bottomPaginationLink.uri;
+                            baseClient.lastPage = bottomPaginationLink.page;
+                        } else if (bottomPaginationLink.rel == RelType.next) {
+                            baseClient.next = bottomPaginationLink.uri;
+                            baseClient.nextPage = bottomPaginationLink.page;
                         }
                     }
 

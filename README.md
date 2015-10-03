@@ -40,7 +40,7 @@ Add dependency in your project `build.gradle`
 ``` groovy
 
 
-    compile 'com.github.alorma:github-sdk:1.2.0'
+    compile 'com.github.alorma:github-sdk:1.2.1'
 ```
 
 ## FORK

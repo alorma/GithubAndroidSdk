@@ -1,6 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'bintray-release'
 apply plugin: 'com.novoda.bintray-release'
+apply plugin: 'com.github.ben-manes.versions'
 
 buildscript {
     repositories {
@@ -13,7 +14,7 @@ buildscript {
 
 android {
     compileSdkVersion 23
-    buildToolsVersion "23.0.0"
+    buildToolsVersion "23.0.1"
 
     defaultConfig {
         minSdkVersion 15
@@ -35,26 +36,14 @@ android {
 }
 
 dependencies {
-
-    compile 'com.android.support:support-annotations:23.0.0'
-
-    compile 'net.danlew:android.joda:2.6.0'
-    compile 'org.ocpsoft.prettytime:prettytime:3.2.4.Final'
-
-    compile 'com.squareup.retrofit:retrofit:1.9.0'
-
-    compile 'com.squareup.okhttp:okhttp:2.0.0'
-
-    compile 'com.squareup.okhttp:okhttp-urlconnection:2.0.0'
-
-    compile 'com.android.support:support-v4:23.0.0'
+    compile project(':sdks:gitskarios-core')
 }
 
 publish {
     userOrg = 'alorma'
     groupId = 'com.github.alorma'
     artifactId = 'github-sdk'
-    version = '1.2.0'
+    version = '1.2.3'
     description = 'A SDK for GitHub implemented in Android'
     website = 'https://github.com/gitskarios/GithubAndroidSdk'
     issueTracker = "${website}/issues"
