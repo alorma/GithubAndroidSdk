@@ -6,6 +6,7 @@ import com.alorma.github.sdk.bean.dto.response.Gist;
 import com.alorma.github.sdk.services.client.GithubClient;
 
 import com.alorma.github.sdk.services.client.GithubListClient;
+import com.alorma.gitskarios.core.client.BaseListClient;
 import java.util.List;
 
 import retrofit.RestAdapter;
@@ -22,23 +23,17 @@ public class PublicGistsClient extends GithubListClient<List<Gist>> {
     }
 
     @Override
-    protected void executeService(RestAdapter restAdapter) {
-        GistsService gistsService = restAdapter.create(GistsService.class);
-        if (page == 0) {
-            gistsService.publicGistsList(this);
-        } else {
-            gistsService.publicGistsList(page, this);
-        }
+    protected ApiSubscriber getApiObservable(RestAdapter restAdapter) {
+        return new ApiSubscriber() {
+            @Override
+            protected void call(RestAdapter restAdapter) {
+                GistsService gistsService = restAdapter.create(GistsService.class);
+                if (page == 0) {
+                    gistsService.publicGistsList(this);
+                } else {
+                    gistsService.publicGistsList(page, this);
+                }
+            }
+        };
     }
-
-    @Override
-    protected List<Gist> executeServiceSync(RestAdapter restAdapter) {
-        GistsService gistsService = restAdapter.create(GistsService.class);
-        if (page == 0) {
-            return gistsService.publicGistsList();
-        } else {
-            return gistsService.publicGistsList(page);
-        }
-    }
-
 }

@@ -24,11 +24,6 @@ public interface GitDataService {
     void repoReferences(@Path("owner") String owner, @Path("repo") String name, @Query("page") int page, Callback<List<GitReference>> callback);
 
     //Sync
-    @GET("/repos/{owner}/{repo}/git/refs")
-    List<GitReference> repoReferences(@Path("owner") String owner, @Path("repo") String name);
-
-    @GET("/repos/{owner}/{repo}/git/refs")
-    List<GitReference> repoReferences(@Path("owner") String owner, @Path("repo") String name, @Query("page") int page);
 
     @GET("/repos/{owner}/{repo}/git/{ref}")
     Observable<GitReference> repoReference(@Path("owner") String owner, @Path("repo") String name,  @Path(value = "ref", encode = false) String ref);

@@ -36,9 +36,6 @@ import rx.functions.Func1;
 import rx.functions.Func2;
 import rx.schedulers.Schedulers;
 
-/**
- * Created by Bernat on 07/04/2015.
- */
 public class IssueStoryLoader extends GithubClient<IssueStory> {
 
     private final IssueInfo issueInfo;

@@ -1,13 +1,9 @@
 package com.alorma.github.sdk.services.orgs;
 
 import android.content.Context;
-
 import com.alorma.github.sdk.bean.dto.response.GithubEvent;
-import com.alorma.github.sdk.services.client.GithubClient;
-
 import com.alorma.github.sdk.services.client.GithubListClient;
 import java.util.List;
-
 import retrofit.RestAdapter;
 
 public class GetOrgEventsClient extends GithubListClient<List<GithubEvent>> {
@@ -28,18 +24,17 @@ public class GetOrgEventsClient extends GithubListClient<List<GithubEvent>> {
     }
 
     @Override
-    protected void executeService(RestAdapter restAdapter) {
-        if(page == 0)
-            restAdapter.create(OrgsService.class).events(username, org, this);
-        else
-            restAdapter.create(OrgsService.class).events(username, org, page, this);
-    }
-
-    @Override
-    protected List<GithubEvent> executeServiceSync(RestAdapter restAdapter) {
-        if(page == 0)
-            return restAdapter.create(OrgsService.class).events(username, org);
-        else
-            return restAdapter.create(OrgsService.class).events(username, org, page);
+    protected ApiSubscriber getApiObservable(RestAdapter restAdapter) {
+        return new ApiSubscriber() {
+            @Override
+            protected void call(RestAdapter restAdapter) {
+                OrgsService orgsService = restAdapter.create(OrgsService.class);
+                if (page == 0) {
+                    orgsService.events(username, org, this);
+                } else {
+                    orgsService.events(username, org, page, this);
+                }
+            }
+        };
     }
 }

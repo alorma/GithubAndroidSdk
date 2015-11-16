@@ -24,44 +24,27 @@ public class StarredReposClient extends GithubReposClient {
 	}
 
 	@Override
-	protected void executeUserFirstPage(String sort, ReposService usersService) {
-		usersService.userStarredReposList(sort, this);
+	protected void executeUserFirstPage(String sort, ReposService usersService,
+		ApiSubscriber apiSubscriber) {
+		usersService.userStarredReposList(sort, apiSubscriber);
 	}
 
 	@Override
-	protected void executeFirstPageByUsername(String username, String sort, ReposService usersService) {
-		usersService.userStarredReposList(username, sort, this);
+	protected void executeFirstPageByUsername(String username, String sort, ReposService usersService,
+		ApiSubscriber apiSubscriber) {
+		usersService.userStarredReposList(username, sort, apiSubscriber);
 	}
 
 	@Override
-	protected void executeUserPaginated(int page, String sort, ReposService usersService) {
-		usersService.userStarredReposList(page, sort, this);
+	protected void executeUserPaginated(int page, String sort, ReposService usersService,
+		ApiSubscriber apiSubscriber) {
+		usersService.userStarredReposList(page, sort, apiSubscriber);
 	}
 
 	@Override
-	protected void executePaginatedByUsername(String username, int page, String sort, ReposService usersService) {
-		usersService.userStarredReposList(username, page, sort, this);
+	protected void executePaginatedByUsername(String username, int page, String sort, ReposService usersService,
+		ApiSubscriber apiSubscriber) {
+		usersService.userStarredReposList(username, page, sort, apiSubscriber);
 	}
-
-	@Override
-	protected List<Repo> executeUserFirstPageSync(String sort, ReposService usersService) {
-		return usersService.userStarredReposList(sort);
-	}
-
-	@Override
-	protected List<Repo> executeFirstPageByUsernameSync(String username, String sort, ReposService usersService) {
-		return usersService.userStarredReposList(username, sort);
-	}
-
-	@Override
-	protected List<Repo> executeUserPaginatedSync(int page, String sort, ReposService usersService) {
-		return usersService.userStarredReposList(page, sort);
-	}
-
-	@Override
-	protected List<Repo> executePaginatedByUsernameSync(String username, int page, String sort, ReposService usersService) {
-		return usersService.userStarredReposList(username, page, sort);
-	}
-
 
 }

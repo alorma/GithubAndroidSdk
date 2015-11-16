@@ -9,6 +9,7 @@ import com.alorma.github.sdk.bean.info.IssueInfo;
 import com.alorma.github.sdk.services.client.GithubClient;
 
 import com.alorma.github.sdk.services.client.GithubListClient;
+import com.alorma.gitskarios.core.client.BaseListClient;
 import java.util.List;
 
 import retrofit.RestAdapter;
@@ -34,23 +35,18 @@ public class GetPullRequestFiles extends GithubListClient<List<CommitFile>> {
     }
 
     @Override
-    protected void executeService(RestAdapter restAdapter) {
-        PullRequestsService pullRequestsService = restAdapter.create(PullRequestsService.class);
-        if (page == 0) {
-            pullRequestsService.files(info.repoInfo.owner, info.repoInfo.name, info.num, this);
-        } else {
-            pullRequestsService.files(info.repoInfo.owner, info.repoInfo.name, info.num, page, this);
-        }
-    }
-
-    @Override
-    protected List<CommitFile> executeServiceSync(RestAdapter restAdapter) {
-        PullRequestsService pullRequestsService = restAdapter.create(PullRequestsService.class);
-        if (page == 0) {
-            return pullRequestsService.files(info.repoInfo.owner, info.repoInfo.name, info.num);
-        } else {
-            return pullRequestsService.files(info.repoInfo.owner, info.repoInfo.name, info.num, page);
-        }
+    protected ApiSubscriber getApiObservable(RestAdapter restAdapter) {
+        return new ApiSubscriber() {
+            @Override
+            protected void call(RestAdapter restAdapter) {
+                PullRequestsService pullRequestsService = restAdapter.create(PullRequestsService.class);
+                if (page == 0) {
+                    pullRequestsService.files(info.repoInfo.owner, info.repoInfo.name, info.num, this);
+                } else {
+                    pullRequestsService.files(info.repoInfo.owner, info.repoInfo.name, info.num, page, this);
+                }
+            }
+        };
     }
 
 }

@@ -1,14 +1,11 @@
 package com.alorma.github.sdk.services.content;
 
 import android.content.Context;
-
 import com.alorma.github.sdk.bean.dto.request.RequestMarkdownDTO;
 import com.alorma.github.sdk.services.client.GithubClient;
-
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.Scanner;
-
 import retrofit.RestAdapter;
 import retrofit.converter.ConversionException;
 import retrofit.converter.Converter;

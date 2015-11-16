@@ -7,6 +7,7 @@ import com.alorma.github.sdk.bean.info.RepoInfo;
 import com.alorma.github.sdk.services.client.GithubClient;
 
 import com.alorma.github.sdk.services.client.GithubListClient;
+import com.alorma.gitskarios.core.client.BaseListClient;
 import java.util.List;
 
 import retrofit.RestAdapter;
@@ -27,20 +28,19 @@ public class GetReferencesClient extends GithubListClient<List<GitReference>> {
     }
 
     @Override
-    protected void executeService(RestAdapter restAdapter) {
-        if (page == 0) {
-            restAdapter.create(GitDataService.class).repoReferences(info.owner, info.name, this);
-        } else {
-            restAdapter.create(GitDataService.class).repoReferences(info.owner, info.name, page, this);
-        }
-    }
-
-    @Override
-    protected List<GitReference> executeServiceSync(RestAdapter restAdapter) {
-        if (page == 0) {
-            return restAdapter.create(GitDataService.class).repoReferences(info.owner, info.name);
-        } else {
-            return restAdapter.create(GitDataService.class).repoReferences(info.owner, info.name, page);
-        }
+    protected ApiSubscriber getApiObservable(RestAdapter restAdapter) {
+        return new ApiSubscriber() {
+            @Override
+            protected void call(RestAdapter restAdapter) {
+                GitDataService gitDataService = restAdapter.create(GitDataService.class);
+                if (page == 0) {
+                    gitDataService
+                        .repoReferences(info.owner, info.name, this);
+                } else {
+                    gitDataService
+                        .repoReferences(info.owner, info.name, page, this);
+                }
+            }
+        };
     }
 }

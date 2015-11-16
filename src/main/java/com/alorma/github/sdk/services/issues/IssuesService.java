@@ -118,12 +118,6 @@ public interface IssuesService {
     @GET("/repos/{owner}/{name}/labels")
     List<Label> labels(@Path("owner") String owner, @Path("name") String repo, @Query("page") int page);
 
-    @GET("/repos/{owner}/{name}/assignees")
-    List<User> assignees(@Path("owner") String owner, @Path("name") String repo);
-
-    @GET("/repos/{owner}/{name}/assignees")
-    List<User> assignees(@Path("owner") String owner, @Path("name") String repo, @Query("page") int page);
-
     @POST("/repos/{owner}/{name}/milestones")
     Observable<Milestone> createMilestone(@Path("owner") String owner, @Path("name") String repo, @Body CreateMilestoneRequestDTO createMilestoneRequestDTO);
 

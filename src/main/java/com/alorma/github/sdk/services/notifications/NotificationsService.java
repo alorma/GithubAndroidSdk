@@ -21,13 +21,9 @@ import rx.Observable;
  */
 public interface NotificationsService {
 
-	//Async
+	//obs
 	@GET("/notifications")
-	void getNotifications(Callback<List<Notification>> notifications);
-
-	//Sync
-	@GET("/notifications")
-	List<Notification> getNotifications();
+	Observable<List<Notification>> getNotifications();
 
 	@PUT("/repos/{owner}/{name}/notifications")
 	Observable<Response> markAsReadRepo(@Path("owner") String owner, @Path("name") String repo);

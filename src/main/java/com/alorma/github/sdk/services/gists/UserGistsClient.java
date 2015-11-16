@@ -6,13 +6,11 @@ import com.alorma.github.sdk.bean.dto.response.Gist;
 import com.alorma.github.sdk.services.client.GithubClient;
 
 import com.alorma.github.sdk.services.client.GithubListClient;
+import com.alorma.gitskarios.core.client.BaseListClient;
 import java.util.List;
 
 import retrofit.RestAdapter;
 
-/**
- * Created by Bernat on 08/07/2014.
- */
 public class UserGistsClient extends GithubListClient<List<Gist>> {
 
     private String username;
@@ -37,44 +35,33 @@ public class UserGistsClient extends GithubListClient<List<Gist>> {
         this.page = page;
     }
 
-    @Override
-    protected void executeService(RestAdapter restAdapter) {
-        GistsService gistsService = restAdapter.create(GistsService.class);
-        if (page == 0) {
-            if (username == null) {
-                gistsService.userGistsListAsync(this);
-            } else {
-                gistsService.userGistsListAsync(username, this);
-            }
-        } else {
-            if (username == null) {
-                gistsService.userGistsListAsync(page, this);
-            } else {
-                gistsService.userGistsListAsync(username, page, this);
-            }
-        }
-    }
 
     @Override
-    protected List<Gist> executeServiceSync(RestAdapter restAdapter) {
-        GistsService gistsService = restAdapter.create(GistsService.class);
-        if (page == 0) {
-            if (username == null) {
-                return gistsService.userGistsList();
-            } else {
-                return gistsService.userGistsList(username);
+    protected ApiSubscriber getApiObservable(RestAdapter restAdapter) {
+        return new ApiSubscriber() {
+            @Override
+            protected void call(RestAdapter restAdapter) {
+                GistsService gistsService = restAdapter.create(GistsService.class);
+                if (page == 0) {
+                    if (username == null) {
+                        gistsService.userGistsListAsync(this);
+                    } else {
+                        gistsService.userGistsListAsync(username, this);
+                    }
+                } else {
+                    if (username == null) {
+                        gistsService.userGistsListAsync(page, this);
+                    } else {
+                        gistsService.userGistsListAsync(username, page, this);
+                    }
+                }
             }
-        } else {
-            if (username == null) {
-                return gistsService.userGistsList(page);
-            } else {
-                return gistsService.userGistsList(username, page);
-            }
-        }
+        };
     }
 
     @Override
 	public String getAcceptHeader() {
 		return "application/vnd.github.v3.raw";
 	}
+
 }

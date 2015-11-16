@@ -9,6 +9,7 @@ import com.alorma.github.sdk.services.client.GithubClient;
 import com.alorma.github.sdk.services.client.GithubListClient;
 import com.alorma.github.sdk.services.issues.IssuesService;
 
+import com.alorma.gitskarios.core.client.BaseListClient;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,24 +31,18 @@ public class GetGistCommentsClient extends GithubListClient<List<GithubComment>>
     }
 
     @Override
-    protected void executeService(RestAdapter restAdapter) {
-        GistsService gistsService = restAdapter.create(GistsService.class);
+    protected ApiSubscriber getApiObservable(RestAdapter restAdapter) {
+        return new ApiSubscriber() {
+            @Override
+            protected void call(RestAdapter restAdapter) {
+                GistsService gistsService = restAdapter.create(GistsService.class);
 
-        if (page == 0) {
-            gistsService.comments(id, this);
-        } else {
-            gistsService.comments(id, page, this);
-        }
-    }
-
-    @Override
-    protected List<GithubComment> executeServiceSync(RestAdapter restAdapter) {
-        GistsService gistsService = restAdapter.create(GistsService.class);
-
-        if (page == 0) {
-            return gistsService.comments(id);
-        } else {
-            return gistsService.comments(id, page);
-        }
+                if (page == 0) {
+                    gistsService.comments(id, this);
+                } else {
+                    gistsService.comments(id, page, this);
+                }
+            }
+        };
     }
 }

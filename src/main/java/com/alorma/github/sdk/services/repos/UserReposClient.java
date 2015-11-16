@@ -21,43 +21,27 @@ public class UserReposClient extends GithubReposClient {
 	}
 
 	@Override
-	protected void executeUserFirstPage(String sort, ReposService usersService) {
-		usersService.userReposList(sort, this);
+	protected void executeUserFirstPage(String sort, ReposService usersService,
+		ApiSubscriber apiSubscriber) {
+		usersService.userReposList(sort, apiSubscriber);
 	}
 
 	@Override
-	protected void executeFirstPageByUsername(String username, String sort, ReposService usersService) {
-		usersService.userReposList(username, sort, this);
+	protected void executeFirstPageByUsername(String username, String sort, ReposService usersService,
+		ApiSubscriber apiSubscriber) {
+		usersService.userReposList(username, sort, apiSubscriber);
 	}
 
 	@Override
-	protected void executeUserPaginated(int page, String sort, ReposService usersService) {
-		usersService.userReposList(page, sort, this);
+	protected void executeUserPaginated(int page, String sort, ReposService usersService,
+		ApiSubscriber apiSubscriber) {
+		usersService.userReposList(page, sort, apiSubscriber);
 	}
 
 	@Override
-	protected void executePaginatedByUsername(String username, int page, String sort, ReposService usersService) {
-		usersService.userReposList(username, page, sort, this);
-	}
-
-	@Override
-	protected List<Repo> executeUserFirstPageSync(String sort, ReposService usersService) {
-		return usersService.userReposList(sort);
-	}
-
-	@Override
-	protected List<Repo> executeFirstPageByUsernameSync(String username, String sort, ReposService usersService) {
-		return usersService.userReposList(username, sort);
-	}
-
-	@Override
-	protected List<Repo> executeUserPaginatedSync(int page, String sort, ReposService usersService) {
-		return usersService.userReposList(page, sort);
-	}
-
-	@Override
-	protected List<Repo> executePaginatedByUsernameSync(String username, int page, String sort, ReposService usersService) {
-		return usersService.userReposList(username, page, sort);
+	protected void executePaginatedByUsername(String username, int page, String sort, ReposService usersService,
+		ApiSubscriber apiSubscriber) {
+		usersService.userReposList(username, page, sort, apiSubscriber);
 	}
 
 	@Override
