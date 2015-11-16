@@ -1,11 +1,12 @@
 package com.alorma.github.sdk.services.issues;
 
 import android.content.Context;
+
 import com.alorma.github.sdk.bean.dto.response.GithubComment;
 import com.alorma.github.sdk.bean.info.IssueInfo;
 import com.alorma.github.sdk.services.client.GithubClient;
+
 import retrofit.RestAdapter;
-import rx.Observable;
 
 /**
  * Created by Bernat on 06/09/2014.
@@ -25,7 +26,16 @@ public class NewIssueCommentClient extends GithubClient<GithubComment> {
 	}
 
 	@Override
-	protected Observable<GithubComment> getApiObservable(RestAdapter restAdapter) {
+	protected void executeService(RestAdapter restAdapter) {
+		GithubComment comment = new GithubComment();
+		comment.body = body;
+
+		IssuesService service = restAdapter.create(IssuesService.class);
+		service.addComment(owner, repo, num, comment, this);
+	}
+
+	@Override
+	protected GithubComment executeServiceSync(RestAdapter restAdapter) {
 		GithubComment comment = new GithubComment();
 		comment.body = body;
 

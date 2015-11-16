@@ -7,13 +7,11 @@ import com.alorma.github.sdk.services.client.GithubClient;
 
 import retrofit.RestAdapter;
 import retrofit.client.Response;
-import rx.Observable;
-import rx.functions.Func1;
 
 /**
  * Created by Bernat on 19/04/2015.
  */
-public class UnsubscribeThread extends GithubClient<Boolean> {
+public class UnsubscribeThread extends GithubClient<Response> {
 
     private Notification notification;
 
@@ -23,13 +21,12 @@ public class UnsubscribeThread extends GithubClient<Boolean> {
     }
 
     @Override
-    protected Observable<Boolean> getApiObservable(RestAdapter restAdapter) {
-        return restAdapter.create(NotificationsService.class).unsubscribeThread(String.valueOf(notification.id))
-            .map(new Func1<Response, Boolean>() {
-                @Override
-                public Boolean call(Response response) {
-                    return response != null && response.getStatus() == 204;
-                }
-            });
+    protected void executeService(RestAdapter restAdapter) {
+        restAdapter.create(NotificationsService.class).unsubscribeThread(String.valueOf(notification.id), this);
+    }
+
+    @Override
+    protected Response executeServiceSync(RestAdapter restAdapter) {
+        return restAdapter.create(NotificationsService.class).unsubscribeThread(String.valueOf(notification.id));
     }
 }

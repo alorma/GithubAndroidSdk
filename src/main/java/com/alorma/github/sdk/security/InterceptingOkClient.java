@@ -1,20 +1,22 @@
 package com.alorma.github.sdk.security;
 
-import com.alorma.gitskarios.core.client.BaseListClient;
-import com.alorma.gitskarios.core.client.PaginationLink;
-import com.alorma.gitskarios.core.client.RelType;
+import com.alorma.github.sdk.bean.info.PaginationLink;
+import com.alorma.github.sdk.bean.info.RelType;
+import com.alorma.gitskarios.core.client.BaseClient;
 import com.squareup.okhttp.OkHttpClient;
+
 import java.io.IOException;
+
 import retrofit.client.Header;
 import retrofit.client.OkClient;
 import retrofit.client.Request;
 import retrofit.client.Response;
 
-public class InterceptingListOkClient extends OkClient {
+public class InterceptingOkClient extends OkClient {
 
-    private BaseListClient baseClient;
+    private BaseClient baseClient;
 
-    public InterceptingListOkClient(OkHttpClient client, BaseListClient baseClient) {
+    public InterceptingOkClient(OkHttpClient client, BaseClient baseClient) {
         super(client);
         this.baseClient = baseClient;
     }

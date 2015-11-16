@@ -7,7 +7,6 @@ import com.alorma.github.sdk.bean.info.IssueInfo;
 import com.alorma.github.sdk.services.client.GithubClient;
 
 import retrofit.RestAdapter;
-import rx.Observable;
 
 public class GetSinglePullRequestClient extends GithubClient<PullRequest> {
 
@@ -19,8 +18,12 @@ public class GetSinglePullRequestClient extends GithubClient<PullRequest> {
     }
 
     @Override
-    protected Observable<PullRequest> getApiObservable(RestAdapter restAdapter) {
-        return restAdapter.create(PullRequestsService.class)
-            .pull(info.repoInfo.owner, info.repoInfo.name, info.num);
+    protected void executeService(RestAdapter restAdapter) {
+        restAdapter.create(PullRequestsService.class).pull(info.repoInfo.owner, info.repoInfo.name, info.num, this);
+    }
+
+    @Override
+    protected PullRequest executeServiceSync(RestAdapter restAdapter) {
+        return restAdapter.create(PullRequestsService.class).pull(info.repoInfo.owner, info.repoInfo.name, info.num);
     }
 }

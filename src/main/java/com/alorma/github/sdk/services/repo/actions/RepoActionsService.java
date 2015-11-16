@@ -1,6 +1,10 @@
 package com.alorma.github.sdk.services.repo.actions;
 
 import com.alorma.github.sdk.bean.dto.response.Repo;
+
+import java.util.List;
+
+import retrofit.Callback;
 import retrofit.client.Response;
 import retrofit.http.Body;
 import retrofit.http.DELETE;
@@ -10,44 +14,68 @@ import retrofit.http.POST;
 import retrofit.http.PUT;
 import retrofit.http.Path;
 import retrofit.http.Query;
-import rx.Observable;
 
 /**
  * Created by Bernat on 07/08/2014.
  */
 public interface RepoActionsService {
 
+    //Async
+    @GET("/user/starred/{owner}/{name}")
+    void checkIfRepoIsStarred(@Path("owner") String owner, @Path("name") String repo, Callback<Response> callback);
+
     @Headers("Content-Length: 0")
     @PUT("/user/starred/{owner}/{name}")
-    Observable<Response> starRepo(@Path("owner") String owner, @Path("name") String repo,
-        @Body String empty);
+    void starRepo(@Path("owner") String owner, @Path("name") String repo, @Body String empty, Callback<Response> callback);
+
+    @DELETE("/user/starred/{owner}/{name}")
+    void unstarRepo(@Path("owner") String owner, @Path("name") String repo, Callback<Response> callback);
+
+    @GET("/user/subscriptions/{owner}/{name}")
+    void checkIfRepoIsWatched(@Path("owner") String owner, @Path("name") String repo, Callback<Response> callback);
 
     @Headers("Content-Length: 0")
     @PUT("/user/subscriptions/{owner}/{name}")
-    Observable<Response> watchRepo(@Path("owner") String owner, @Path("name") String repo,
-        @Body String empty);
-
-    @GET("/user/starred/{owner}/{name}")
-    Observable<Response> checkIfRepoIsStarred(@Path("owner") String owner,
-        @Path("name") String repo);
-
-    @DELETE("/user/starred/{owner}/{name}")
-    Observable<Response> unstarRepo(@Path("owner") String owner, @Path("name") String repo);
-
-    @GET("/user/subscriptions/{owner}/{name}")
-    Observable<Response> checkIfRepoIsWatched(@Path("owner") String owner,
-        @Path("name") String repo);
+    void watchRepo(@Path("owner") String owner, @Path("name") String repo, @Body String empty, Callback<Object> callback);
 
     @DELETE("/user/subscriptions/{owner}/{name}")
-    Observable<Response> unwatchRepo(@Path("owner") String owner, @Path("name") String repo);
+    void unwatchRepo(@Path("owner") String owner, @Path("name") String repo, Callback<Response> callback);
 
     @Headers("Content-Length: 0")
     @POST("/repos/{owner}/{name}/forks")
-    Observable<Repo> forkRepo(@Path("owner") String owner, @Path("name") String repo,
-        @Body Object empty);
+    void forkRepo(@Path("owner") String owner, @Path("name") String repo, @Body Object empty, Callback<Repo> callback);
 
     @Headers("Content-Length: 0")
     @POST("/repos/{owner}/{name}/forks")
-    Observable<Repo> forkRepo(@Path("owner") String owner, @Path("name") String repo,
-        @Query("organization") String org, @Body Object empty);
+    void forkRepo(@Path("owner") String owner, @Path("name") String repo, @Query("organization") String org, @Body Object empty, Callback<Repo> callback);
+
+
+    //Sync
+    @GET("/user/starred/{owner}/{name}")
+    Response checkIfRepoIsStarred(@Path("owner") String owner, @Path("name") String repo);
+
+    @Headers("Content-Length: 0")
+    @PUT("/user/starred/{owner}/{name}")
+    Response starRepo(@Path("owner") String owner, @Path("name") String repo, @Body String empty);
+
+    @DELETE("/user/starred/{owner}/{name}")
+    Response unstarRepo(@Path("owner") String owner, @Path("name") String repo);
+
+    @GET("/user/subscriptions/{owner}/{name}")
+    Response checkIfRepoIsWatched(@Path("owner") String owner, @Path("name") String repo);
+
+    @Headers("Content-Length: 0")
+    @PUT("/user/subscriptions/{owner}/{name}")
+    Response watchRepo(@Path("owner") String owner, @Path("name") String repo, @Body String empty);
+
+    @DELETE("/user/subscriptions/{owner}/{name}")
+    Response unwatchRepo(@Path("owner") String owner, @Path("name") String repo);
+
+    @Headers("Content-Length: 0")
+    @POST("/repos/{owner}/{name}/forks")
+    Repo forkRepo(@Path("owner") String owner, @Path("name") String repo, @Body Object empty);
+
+    @Headers("Content-Length: 0")
+    @POST("/repos/{owner}/{name}/forks")
+    Repo forkRepo(@Path("owner") String owner, @Path("name") String repo, @Query("organization") String org, @Body Object empty);
 }

@@ -5,10 +5,7 @@ import android.content.Context;
 import com.alorma.github.sdk.bean.dto.response.Branch;
 import com.alorma.github.sdk.bean.info.RepoInfo;
 
-import com.alorma.github.sdk.services.client.GithubClient;
 import java.util.List;
-import retrofit.RestAdapter;
-import rx.Observable;
 
 /**
  * Created by Bernat on 20/07/2014.
@@ -20,7 +17,12 @@ public class GetRepoBranchesClient extends GithubRepoClient<List<Branch>> {
 	}
 
 	@Override
-	protected Observable<List<Branch>> getApiObservable(RestAdapter restAdapter) {
-		return restAdapter.create(RepoService.class).branches(getOwner(), getRepo());
+	protected void executeService(RepoService repoService) {
+		repoService.branches(getOwner(), getRepo(), this);
+	}
+
+	@Override
+	protected List<Branch> executeServiceSync(RepoService repoService) {
+		return repoService.branches(getOwner(), getRepo());
 	}
 }

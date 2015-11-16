@@ -4,14 +4,13 @@ import android.content.Context;
 
 import com.alorma.github.sdk.services.client.GithubClient;
 
-import com.alorma.github.sdk.services.client.GithubListClient;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 
 /**
  * Created by Bernat on 13/07/2014.
  */
-public abstract class GithubUsersClient<K> extends GithubListClient<K> {
+public abstract class GithubUsersClient<K> extends GithubClient<K> {
     public GithubUsersClient(Context context) {
         super(context);
     }

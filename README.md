@@ -40,6 +40,8 @@ maven {
 Add dependency in your project `build.gradle`
 
 ``` groovy
+
+
     compile 'com.github.alorma:github-sdk:1.5.0'
 ```
 

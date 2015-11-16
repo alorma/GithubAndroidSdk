@@ -2,21 +2,25 @@ package com.alorma.github.sdk.services.user;
 
 import com.alorma.github.sdk.bean.dto.response.Email;
 import com.alorma.github.sdk.bean.dto.response.User;
+
 import java.util.List;
+
 import retrofit.Callback;
-import retrofit.client.Response;
 import retrofit.http.Body;
 import retrofit.http.DELETE;
 import retrofit.http.GET;
 import retrofit.http.PUT;
 import retrofit.http.Path;
 import retrofit.http.Query;
-import rx.Observable;
 
 /**
  * Created by Bernat on 12/07/2014.
  */
 public interface UsersService {
+
+	//Async
+	@GET("/users/{user}")
+	void getSingleUser(@Path("user") String user, Callback<User> callback);
 
 	@GET("/user/emails")
 	void userEmails(Callback<List<Email>> callback);
@@ -47,6 +51,21 @@ public interface UsersService {
 	@GET("/users/{username}/following")
 	void following(@Path("username") String username, @Query("page") int page, Callback<List<User>> callback);
 
+	@GET("/user")
+	void me(Callback<User> userCallback);
+
+	// FOLLOWING USER
+
+	@GET("/user/following/{username}")
+	void checkFollowing(@Path("username") String username, Callback<Object> callback);
+
+	@PUT("/user/following/{username}")
+	void followUser(@Body String empty, @Path("username") String username, Callback<Object> callback);
+
+	@DELETE("/user/following/{username}")
+	void unfollowUser(@Path("username") String username, Callback<Object> callback);
+
+
 	//ORGS MEMBERS
 
 	@GET("/orgs/{org}/members")
@@ -58,7 +77,7 @@ public interface UsersService {
 
 	//Sync
 	@GET("/users/{user}")
-	Observable<User> getSingleUser(@Path("user") String user);
+	User getSingleUser(@Path("user") String user);
 
 	@GET("/user/emails")
 	List<Email> userEmails();
@@ -90,18 +109,18 @@ public interface UsersService {
 	List<User> following(@Path("username") String username, @Query("page") int page);
 
 	@GET("/user")
-	Observable<User> me();
+	User me();
 
 	// FOLLOWING USER
 
 	@GET("/user/following/{username}")
-	Observable<Response> checkFollowing(@Path("username") String username);
+	Object checkFollowing(@Path("username") String username);
 
 	@PUT("/user/following/{username}")
-	Observable<Response> followUser(@Body String empty, @Path("username") String username);
+	Object followUser(@Body String empty, @Path("username") String username);
 
 	@DELETE("/user/following/{username}")
-	Observable<Response> unfollowUser(@Path("username") String username);
+	Object unfollowUser(@Path("username") String username);
 
 
 	//ORGS MEMBERS

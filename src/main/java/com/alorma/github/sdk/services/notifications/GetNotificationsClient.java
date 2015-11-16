@@ -5,7 +5,6 @@ import android.content.Context;
 import com.alorma.github.sdk.bean.dto.response.Notification;
 import com.alorma.github.sdk.services.client.GithubClient;
 
-import com.alorma.github.sdk.services.client.GithubListClient;
 import java.util.List;
 
 import retrofit.RestAdapter;
@@ -13,7 +12,7 @@ import retrofit.RestAdapter;
 /**
  * Created by Bernat on 18/02/2015.
  */
-public class GetNotificationsClient extends GithubListClient<List<Notification>> {
+public class GetNotificationsClient extends GithubClient<List<Notification>> {
 
 	private String token;
 

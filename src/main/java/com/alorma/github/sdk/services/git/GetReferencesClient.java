@@ -6,12 +6,11 @@ import com.alorma.github.sdk.bean.dto.response.GitReference;
 import com.alorma.github.sdk.bean.info.RepoInfo;
 import com.alorma.github.sdk.services.client.GithubClient;
 
-import com.alorma.github.sdk.services.client.GithubListClient;
 import java.util.List;
 
 import retrofit.RestAdapter;
 
-public class GetReferencesClient extends GithubListClient<List<GitReference>> {
+public class GetReferencesClient extends GithubClient<List<GitReference>> {
 
     private final RepoInfo info;
     private final int page;

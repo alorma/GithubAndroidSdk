@@ -8,7 +8,6 @@ import com.alorma.github.sdk.bean.info.CommitInfo;
 import com.alorma.github.sdk.services.client.GithubClient;
 
 import retrofit.RestAdapter;
-import rx.Observable;
 
 public class PublishCommitCommentClient extends GithubClient<CommitComment>{
 
@@ -22,8 +21,12 @@ public class PublishCommitCommentClient extends GithubClient<CommitComment>{
     }
 
     @Override
-    protected Observable<CommitComment> getApiObservable(RestAdapter restAdapter) {
-        return restAdapter.create(CommitsService.class)
-            .publishComment(info.repoInfo.owner, info.repoInfo.name, info.sha, request);
+    protected void executeService(RestAdapter restAdapter) {
+        restAdapter.create(CommitsService.class).publishComment(info.repoInfo.owner, info.repoInfo.name, info.sha, request, this);
+    }
+
+    @Override
+    protected CommitComment executeServiceSync(RestAdapter restAdapter) {
+        return restAdapter.create(CommitsService.class).publishComment(info.repoInfo.owner, info.repoInfo.name, info.sha, request);
     }
 }

@@ -7,7 +7,6 @@ import com.alorma.github.sdk.bean.dto.response.ReviewComment;
 import com.alorma.github.sdk.bean.info.IssueInfo;
 import com.alorma.github.sdk.services.client.GithubClient;
 
-import com.alorma.github.sdk.services.client.GithubListClient;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,42 +15,71 @@ import retrofit.RestAdapter;
 /**
  * Created by a557114 on 25/07/2015.
  */
-public class PullRequestReviewCommentsClient extends GithubListClient<List<ReviewComment>> {
+public class PullRequestReviewCommentsClient extends GithubClient<List<ReviewComment>> {
 
     private IssueInfo info;
-    private final int page;
 
     public PullRequestReviewCommentsClient(Context context, IssueInfo info) {
-        this(context, info, 0);
-    }
-
-    public PullRequestReviewCommentsClient(Context context, IssueInfo info, int page) {
         super(context);
         this.info = info;
-        this.page = page;
     }
 
     @Override
     protected void executeService(RestAdapter restAdapter) {
         PullRequestsService service = restAdapter.create(PullRequestsService.class);
-
-        if (page == 0) {
-            service.reviewComments(info.repoInfo.owner, info.repoInfo.name, info.num, this);
-        } else {
-            service.reviewComments(info.repoInfo.owner, info.repoInfo.name, info.num, page, this);
-        }
+        new ReviewCommentsCallback(context, info, service, getOnResultCallback()).execute();
     }
 
     @Override
     protected List<ReviewComment> executeServiceSync(RestAdapter restAdapter) {
         PullRequestsService service = restAdapter.create(PullRequestsService.class);
+        List<ReviewComment> comments = new ArrayList<>();
 
-        if (page == 0) {
-            return service.reviewComments(info.repoInfo.owner, info.repoInfo.name, info.num);
-        } else {
-            return service.reviewComments(info.repoInfo.owner, info.repoInfo.name, info.num, page);
+        comments.addAll(service.reviewComments(info.repoInfo.owner, info.repoInfo.name, info.num, 1));
+
+        for (int i = nextPage; i < lastPage; i++)
+            comments.addAll(service.reviewComments(info.repoInfo.owner, info.repoInfo.name, info.num, i));
+
+        return comments;
+    }
+
+    private class ReviewCommentsCallback extends BaseInfiniteCallback<List<ReviewComment>> {
+
+        private final Context context;
+        private final IssueInfo info;
+        private PullRequestsService pullRequestsService;
+        private final OnResultCallback<List<ReviewComment>> onResultCallback;
+        private List<ReviewComment> comments;
+
+        public ReviewCommentsCallback(Context context, IssueInfo info, PullRequestsService pullRequestsService, OnResultCallback<List<ReviewComment>> onResultCallback) {
+            this.context = context;
+            this.info = info;
+            this.pullRequestsService = pullRequestsService;
+            this.onResultCallback = onResultCallback;
+            comments = new ArrayList<>();
         }
 
+        @Override
+        protected void executePaginated(int nextPage) {
+            pullRequestsService.reviewComments(info.repoInfo.owner, info.repoInfo.name, info.num, nextPage, this);
+        }
+
+        @Override
+        protected void executeNext() {
+            if (onResultCallback != null) {
+                onResultCallback.onResponseOk(comments, null);
+            }
+        }
+
+        @Override
+        protected void response(List<ReviewComment> reviewComments) {
+            comments.addAll(reviewComments);
+        }
+
+        @Override
+        public void execute() {
+            pullRequestsService.reviewComments(info.repoInfo.owner, info.repoInfo.name, info.num, this);
+        }
     }
 
     @Override

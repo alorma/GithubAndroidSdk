@@ -8,7 +8,6 @@ import com.alorma.github.sdk.bean.dto.response.Token;
 import com.alorma.github.sdk.services.client.GithubClient;
 
 import retrofit.RestAdapter;
-import rx.Observable;
 
 /**
  * Created by Bernat on 13/07/2014.
@@ -22,14 +21,14 @@ public class RequestTokenClient extends GithubClient<Token> {
     }
 
     @Override
-    protected RestAdapter getRestAdapter() {
+    public void execute() {
         RestAdapter restAdapter = new RestAdapter.Builder()
-            .setEndpoint(getClient().getApiOauthUrlEndpoint())
-            .setRequestInterceptor(this)
-            .setLogLevel(RestAdapter.LogLevel.FULL)
-            .build();
+                .setEndpoint(getClient().getApiOauthUrlEndpoint())
+                .setRequestInterceptor(this)
+                .setLogLevel(RestAdapter.LogLevel.FULL)
+                .build();
 
-        return restAdapter;
+        executeService(restAdapter);
     }
 
     @Override
@@ -38,7 +37,21 @@ public class RequestTokenClient extends GithubClient<Token> {
     }
 
     @Override
-    protected Observable<Token> getApiObservable(RestAdapter restAdapter) {
+    protected void executeService(RestAdapter restAdapter) {
+        LoginService loginService = restAdapter.create(LoginService.class);
+
+
+        RequestTokenDTO tokenDTO = new RequestTokenDTO();
+        tokenDTO.client_id = GithubDeveloperCredentials.getInstance().getProvider().getApiClient();
+        tokenDTO.client_secret = GithubDeveloperCredentials.getInstance().getProvider().getAPiSecret();
+        tokenDTO.redirect_uri = GithubDeveloperCredentials.getInstance().getProvider().getApiOauth();
+        tokenDTO.code = code;
+
+        loginService.requestToken(tokenDTO, this);
+    }
+
+    @Override
+    protected Token executeServiceSync(RestAdapter restAdapter) {
         LoginService loginService = restAdapter.create(LoginService.class);
 
 

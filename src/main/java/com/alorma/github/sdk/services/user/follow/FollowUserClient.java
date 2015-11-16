@@ -9,31 +9,52 @@ import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
-import rx.Observable;
-import rx.functions.Func1;
 
 /**
  * Created by Bernat on 27/12/2014.
  */
-public class FollowUserClient extends GithubClient<Boolean>{
+public class FollowUserClient extends GithubClient<Object> implements GithubClient.OnResultCallback<Object> {
 
+	private OnCheckFollowingUser onCheckFollowingUser;
 	private String username;
 
 	public FollowUserClient(Context context, String username) {
 		super(context);
 		this.username = username;
+		setOnResultCallback(this);
 	}
 
 	@Override
-	protected Observable<Boolean> getApiObservable(RestAdapter restAdapter) {
-		return restAdapter.create(UsersService.class).followUser("", username).map(new Func1<Response, Boolean>() {
-			@Override
-			public Boolean call(Response r) {
-				return r != null && r.getStatus() == 204;
-			}
-		});
+	protected void executeService(RestAdapter restAdapter) {
+		restAdapter.create(UsersService.class).followUser("", username, this);
 	}
 
+	@Override
+	protected Object executeServiceSync(RestAdapter restAdapter) {
+		return restAdapter.create(UsersService.class).followUser("", username);
+	}
+
+	@Override
+	public void onResponseOk(Object o, Response r) {
+		if (r != null && r.getStatus() == 204) {
+			if (onCheckFollowingUser != null) {
+				onCheckFollowingUser.onCheckFollowUser(username, true);
+			}
+		}
+	}
+
+	@Override
+	public void onFail(RetrofitError error) {
+		if (error != null && error.getResponse() != null && error.getResponse().getStatus() == 404) {
+			if (onCheckFollowingUser != null) {
+				onCheckFollowingUser.onCheckFollowUser(username, false);
+			}
+		}
+	}
+
+	public void setOnCheckFollowingUser(OnCheckFollowingUser onCheckFollowingUser) {
+		this.onCheckFollowingUser = onCheckFollowingUser;
+	}
 
 	@Override
 	public void intercept(RequestFacade request) {

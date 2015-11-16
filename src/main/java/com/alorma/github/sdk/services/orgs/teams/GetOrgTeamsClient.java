@@ -5,7 +5,6 @@ import android.content.Context;
 import com.alorma.github.sdk.bean.dto.response.Team;
 import com.alorma.github.sdk.services.client.GithubClient;
 
-import com.alorma.github.sdk.services.client.GithubListClient;
 import java.util.List;
 
 import retrofit.RestAdapter;
@@ -13,7 +12,7 @@ import retrofit.RestAdapter;
 /**
  * Created by Bernat on 04/09/2014.
  */
-public class GetOrgTeamsClient extends GithubListClient<List<Team>> {
+public class GetOrgTeamsClient extends GithubClient<List<Team>> {
     private String org;
     private int page = -1;
 

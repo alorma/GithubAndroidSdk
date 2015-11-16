@@ -25,7 +25,6 @@ import retrofit.http.POST;
 import retrofit.http.Path;
 import retrofit.http.Query;
 import retrofit.http.QueryMap;
-import rx.Observable;
 
 /**
  * Created by Bernat on 22/08/2014.
@@ -45,6 +44,12 @@ public interface IssuesService {
     @GET("/issues")
     void issues(@QueryMap Map<String, String> filter, @Query("page") int page, Callback<List<Issue>> callback);
 
+    @POST("/repos/{owner}/{name}/issues")
+    void create(@Path("owner") String owner, @Path("name") String repo, @Body IssueRequest issue, Callback<Issue> callback);
+
+    @GET("/repos/{owner}/{name}/issues/{num}")
+    void detail(@Path("owner") String owner, @Path("name") String repo, @Path("num") int num, Callback<Issue> callback);
+
     @GET("/repos/{owner}/{name}/issues/{num}/comments")
     void comments(@Path("owner") String owner, @Path("name") String repo, @Path("num") int num, Callback<List<GithubComment>> callback);
 
@@ -56,6 +61,12 @@ public interface IssuesService {
 
 	@GET("/repos/{owner}/{name}/issues/{num}/events")
 	void events(@Path("owner") String owner, @Path("name") String repo, @Path("num") int num, @Query("page") int page, Callback<List<GithubEvent>> callback);
+
+	@PATCH("/repos/{owner}/{name}/issues/{num}")
+	void closeIssue(@Path("owner") String owner, @Path("name") String repo, @Path("num") int num, @Body IssueRequest issueRequest, Callback<Issue> callback);
+
+	@POST("/repos/{owner}/{name}/issues/{num}/comments")
+	void addComment(@Path("owner") String owner, @Path("name") String repo, @Path("num") int num, @Body GithubComment comment, Callback<GithubComment> callback);
 
     @GET("/repos/{owner}/{name}/milestones") //State can be open, closed and all
     void milestones(@Path("owner") String owner, @Path("name") String repo, @Query("state") String state, Callback<List<Milestone>> callback);
@@ -75,6 +86,19 @@ public interface IssuesService {
     @GET("/repos/{owner}/{name}/assignees")
     void assignees(@Path("owner") String owner, @Path("name") String repo, @Query("page") int page, Callback<List<User>> callback);
 
+    @POST("/repos/{owner}/{name}/milestones")
+    void createMilestone(@Path("owner") String owner, @Path("name") String repo, @Body CreateMilestoneRequestDTO createMilestoneRequestDTO, Callback<Milestone> callback);
+
+    @PATCH("/repos/{owner}/{name}/issues/{number}")
+    void editIssue(@Path("owner") String owner, @Path("name") String repo, @Path("number") int number, @Body EditIssueRequestDTO editIssueRequestDTO, Callback<Issue> callback);
+
+    @DELETE("/repos/{owner}/{name}/issues/comments/{id}")
+    void deleteComment(@Path("owner") String owner, @Path("name") String name, @Path("id") String id, Callback<Response> callback);
+
+    @PATCH("/repos/{owner}/{name}/issues/comments/{id}")
+    void editComment(@Path("owner") String owner, @Path("name") String name, @Path("id") String id, @Body CommentRequest body, Callback<GithubComment> callback);
+
+
     //Sync
     @GET("/repos/{owner}/{name}/issues?sort=updated")
     List<Issue> issues(@Path("owner") String owner, @Path("name") String repo, @QueryMap Map<String, String> filter);
@@ -89,10 +113,10 @@ public interface IssuesService {
     List<Issue> issues(@QueryMap Map<String, String> filter, @Query("page") int page);
 
     @POST("/repos/{owner}/{name}/issues")
-    Observable<Issue> create(@Path("owner") String owner, @Path("name") String repo, @Body IssueRequest issue);
+    Issue create(@Path("owner") String owner, @Path("name") String repo, @Body IssueRequest issue);
 
     @GET("/repos/{owner}/{name}/issues/{num}")
-    Observable<Issue> detail(@Path("owner") String owner, @Path("name") String repo, @Path("num") int num);
+    Issue detail(@Path("owner") String owner, @Path("name") String repo, @Path("num") int num);
 
     @GET("/repos/{owner}/{name}/issues/{num}/comments")
     List<GithubComment> comments(@Path("owner") String owner, @Path("name") String repo, @Path("num") int num);
@@ -107,10 +131,16 @@ public interface IssuesService {
     List<GithubEvent> events(@Path("owner") String owner, @Path("name") String repo, @Path("num") int num, @Query("page") int page);
 
     @PATCH("/repos/{owner}/{name}/issues/{num}")
-    Observable<Issue> closeIssue(@Path("owner") String owner, @Path("name") String repo, @Path("num") int num, @Body IssueRequest issueRequest);
+    Issue closeIssue(@Path("owner") String owner, @Path("name") String repo, @Path("num") int num, @Body IssueRequest issueRequest);
 
     @POST("/repos/{owner}/{name}/issues/{num}/comments")
-    Observable<GithubComment> addComment(@Path("owner") String owner, @Path("name") String repo, @Path("num") int num, @Body GithubComment comment);
+    GithubComment addComment(@Path("owner") String owner, @Path("name") String repo, @Path("num") int num, @Body GithubComment comment);
+
+    @GET("/repos/{owner}/{name}/milestones") //State can be open, closed and all
+    List<Milestone> milestones(@Path("owner") String owner, @Path("name") String repo, @Query("state") String state);
+
+    @GET("/repos/{owner}/{name}/milestones") //State can be open, closed and all
+    List<Milestone> milestones(@Path("owner") String owner, @Path("name") String repo, @Query("state") String state, @Query("page") int page);
 
     @GET("/repos/{owner}/{name}/labels")
     List<Label> labels(@Path("owner") String owner, @Path("name") String repo);
@@ -125,14 +155,14 @@ public interface IssuesService {
     List<User> assignees(@Path("owner") String owner, @Path("name") String repo, @Query("page") int page);
 
     @POST("/repos/{owner}/{name}/milestones")
-    Observable<Milestone> createMilestone(@Path("owner") String owner, @Path("name") String repo, @Body CreateMilestoneRequestDTO createMilestoneRequestDTO);
+    Milestone createMilestone(@Path("owner") String owner, @Path("name") String repo, @Body CreateMilestoneRequestDTO createMilestoneRequestDTO);
 
     @PATCH("/repos/{owner}/{name}/issues/{number}")
-    Observable<Issue> editIssue(@Path("owner") String owner, @Path("name") String repo, @Path("number") int number, @Body EditIssueRequestDTO editIssueRequestDTO);
+    Issue editIssue(@Path("owner") String owner, @Path("name") String repo, @Path("number") int number, @Body EditIssueRequestDTO editIssueRequestDTO);
 
     @DELETE("/repos/{owner}/{name}/issues/comments/{id}")
-    Observable<Response> deleteComment(@Path("owner") String owner, @Path("name") String name, @Path("id") String id);
+    Response deleteComment(@Path("owner") String owner, @Path("name") String name, @Path("id") String id);
 
     @PATCH("/repos/{owner}/{name}/issues/comments/{id}")
-    Observable<GithubComment> editComment(@Path("owner") String owner, @Path("name") String name, @Path("id") String id, @Body CommentRequest body);
+    GithubComment editComment(@Path("owner") String owner, @Path("name") String name, @Path("id") String id, @Body CommentRequest body);
 }
