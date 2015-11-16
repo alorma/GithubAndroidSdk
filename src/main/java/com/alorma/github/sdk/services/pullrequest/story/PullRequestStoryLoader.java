@@ -14,7 +14,6 @@ import com.alorma.github.sdk.bean.issue.IssueStoryComparators;
 import com.alorma.github.sdk.bean.issue.IssueStoryDetail;
 import com.alorma.github.sdk.bean.issue.IssueStoryEvent;
 import com.alorma.github.sdk.bean.issue.PullRequestStory;
-import com.alorma.github.sdk.services.client.BaseInfiniteCallback;
 import com.alorma.github.sdk.services.client.GithubClient;
 import com.alorma.github.sdk.services.issues.story.IssueStoryService;
 import com.fernandocejas.frodo.annotation.RxLogObservable;
@@ -53,9 +52,20 @@ public class PullRequestStoryLoader extends GithubClient<PullRequestStory> {
     issueStoryService = getRestAdapter().create(IssueStoryService.class);
   }
 
-  @Override
-  protected Observable<PullRequestStory> getApiObservable(RestAdapter restAdapter) {
+  @RxLogObservable
+  public Observable<PullRequestStory> create() {
     return getPullrequestStory();
+  }
+
+  @Override
+  @RxLogObservable
+  public Observable<Pair<PullRequestStory, Response>> observable() {
+    return create().map(new Func1<PullRequestStory, Pair<PullRequestStory, Response>>() {
+      @Override
+      public Pair<PullRequestStory, Response> call(PullRequestStory issueStory) {
+        return new Pair<>(issueStory, null);
+      }
+    });
   }
 
   @NonNull
@@ -100,17 +110,33 @@ public class PullRequestStoryLoader extends GithubClient<PullRequestStory> {
   @NonNull
   @RxLogObservable
   private Observable<List<GithubComment>> getCommentsObs() {
-    return Observable.create(new BaseInfiniteCallback<List<GithubComment>>() {
+    return Observable.create(new Observable.OnSubscribe<List<GithubComment>>() {
       @Override
-      public void execute() {
-        issueStoryService.comments(issueInfo.repoInfo.owner, issueInfo.repoInfo.name, issueInfo.num,
-            this);
-      }
+      public void call(final Subscriber<? super List<GithubComment>> subscriber) {
+        new BaseInfiniteCallback<List<GithubComment>>() {
 
-      @Override
-      protected void executePaginated(int nextPage) {
-        issueStoryService.comments(issueInfo.repoInfo.owner, issueInfo.repoInfo.name, issueInfo.num,
-            nextPage, this);
+          @Override
+          public void execute() {
+            issueStoryService.comments(issueInfo.repoInfo.owner, issueInfo.repoInfo.name,
+                issueInfo.num, this);
+          }
+
+          @Override
+          protected void executePaginated(int nextPage) {
+            issueStoryService.comments(issueInfo.repoInfo.owner, issueInfo.repoInfo.name,
+                issueInfo.num, nextPage, this);
+          }
+
+          @Override
+          protected void executeNext() {
+            subscriber.onCompleted();
+          }
+
+          @Override
+          protected void response(List<GithubComment> githubComments) {
+            subscriber.onNext(githubComments);
+          }
+        }.execute();
       }
     });
   }
@@ -138,18 +164,33 @@ public class PullRequestStoryLoader extends GithubClient<PullRequestStory> {
   @NonNull
   @RxLogObservable
   private Observable<List<IssueEvent>> getEventsObs() {
-    return Observable.create(new BaseInfiniteCallback<List<IssueEvent>>() {
-
+    return Observable.create(new Observable.OnSubscribe<List<IssueEvent>>() {
       @Override
-      public void execute() {
-        issueStoryService.events(issueInfo.repoInfo.owner, issueInfo.repoInfo.name, issueInfo.num,
-            this);
-      }
+      public void call(final Subscriber<? super List<IssueEvent>> subscriber) {
+        new BaseInfiniteCallback<List<IssueEvent>>() {
 
-      @Override
-      protected void executePaginated(int nextPage) {
-        issueStoryService.events(issueInfo.repoInfo.owner, issueInfo.repoInfo.name, issueInfo.num,
-            nextPage, this);
+          @Override
+          public void execute() {
+            issueStoryService.events(issueInfo.repoInfo.owner, issueInfo.repoInfo.name,
+                issueInfo.num, this);
+          }
+
+          @Override
+          protected void executePaginated(int nextPage) {
+            issueStoryService.events(issueInfo.repoInfo.owner, issueInfo.repoInfo.name,
+                issueInfo.num, nextPage, this);
+          }
+
+          @Override
+          protected void executeNext() {
+            subscriber.onCompleted();
+          }
+
+          @Override
+          protected void response(List<IssueEvent> issueEvents) {
+            subscriber.onNext(issueEvents);
+          }
+        }.execute();
       }
     });
   }
@@ -182,17 +223,46 @@ public class PullRequestStoryLoader extends GithubClient<PullRequestStory> {
   @NonNull
   @RxLogObservable
   private Observable<List<Label>> getLabelsObs() {
-    return Observable.create(new BaseInfiniteCallback<List<Label>>() {
+    return Observable.create(new Observable.OnSubscribe<List<Label>>() {
       @Override
-      public void execute() {
-        issueStoryService.labels(owner, repo, num, this);
-      }
+      public void call(final Subscriber<? super List<Label>> subscriber) {
+        new BaseInfiniteCallback<List<Label>>() {
 
-      @Override
-      protected void executePaginated(int nextPage) {
-        issueStoryService.labels(owner, repo, num, nextPage, this);
+          @Override
+          public void execute() {
+            issueStoryService.labels(owner, repo, num, this);
+          }
+
+          @Override
+          protected void executePaginated(int nextPage) {
+            issueStoryService.labels(owner, repo, num, nextPage, this);
+          }
+
+          @Override
+          protected void executeNext() {
+            subscriber.onCompleted();
+          }
+
+          @Override
+          protected void response(List<Label> issueLabels) {
+            subscriber.onNext(issueLabels);
+          }
+        }.execute();
       }
     });
+  }
+
+  @Override
+  protected void executeService(RestAdapter restAdapter) {
+    PullRequestStory issueStory = executeServiceSync(restAdapter);
+    if (getOnResultCallback() != null) {
+      getOnResultCallback().onResponseOk(issueStory, null);
+    }
+  }
+
+  @Override
+  protected PullRequestStory executeServiceSync(RestAdapter restAdapter) {
+    return observable().toBlocking().single().first;
   }
 
   private long getMilisFromDateClearDay(String createdAt) {

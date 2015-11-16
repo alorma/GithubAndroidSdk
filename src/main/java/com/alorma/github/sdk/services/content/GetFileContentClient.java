@@ -8,7 +8,6 @@ import com.alorma.github.sdk.bean.info.RepoInfo;
 import com.alorma.github.sdk.services.client.GithubClient;
 
 import retrofit.RestAdapter;
-import rx.Observable;
 
 /**
  * Created by Bernat on 10/09/2014.
@@ -23,7 +22,20 @@ public class GetFileContentClient extends GithubClient<Content> {
     }
 
     @Override
-    protected Observable<Content> getApiObservable(RestAdapter restAdapter) {
+    protected void executeService(RestAdapter restAdapter) {
+        ContentService contentService = restAdapter.create(ContentService.class);
+
+        if (fileInfo.head != null) {
+            contentService.fileContentSha(fileInfo.repoInfo.owner, fileInfo.repoInfo.name, fileInfo.path, fileInfo.head, this);
+        } else if (fileInfo.repoInfo.branch != null) {
+            contentService.fileContentRef(fileInfo.repoInfo.owner, fileInfo.repoInfo.name, fileInfo.path, fileInfo.repoInfo.branch, this);
+        } else {
+            contentService.fileContent(fileInfo.repoInfo.owner, fileInfo.repoInfo.name, fileInfo.path, this);
+        }
+    }
+
+    @Override
+    protected Content executeServiceSync(RestAdapter restAdapter) {
         ContentService contentService = restAdapter.create(ContentService.class);
 
         if (fileInfo.head != null) {

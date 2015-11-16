@@ -7,7 +7,6 @@ import com.alorma.github.sdk.bean.info.RepoInfo;
 import com.alorma.github.sdk.services.client.GithubClient;
 
 import retrofit.RestAdapter;
-import rx.Observable;
 
 /**
  * Created by a557114 on 31/07/2015.
@@ -25,7 +24,12 @@ public class CompareCommitsClient extends GithubClient<CompareCommit> {
     }
 
     @Override
-    protected Observable<CompareCommit> getApiObservable(RestAdapter restAdapter) {
+    protected void executeService(RestAdapter restAdapter) {
+        restAdapter.create(RepoService.class).compareCommits(repoInfo.owner, repoInfo.name, base, head, this);
+    }
+
+    @Override
+    protected CompareCommit executeServiceSync(RestAdapter restAdapter) {
         return restAdapter.create(RepoService.class).compareCommits(repoInfo.owner, repoInfo.name, base, head);
     }
 }

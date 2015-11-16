@@ -7,7 +7,6 @@ import com.alorma.github.sdk.services.client.GithubClient;
 import java.util.HashMap;
 
 import retrofit.RestAdapter;
-import rx.Observable;
 
 /**
  * Created by Bernat on 08/07/2015.
@@ -19,7 +18,13 @@ public class EmojisClient extends GithubClient<HashMap<String, String>> {
     }
 
     @Override
-    protected Observable<HashMap<String, String>> getApiObservable(RestAdapter restAdapter) {
+    protected void executeService(RestAdapter restAdapter) {
+        restAdapter.create(EmojisService.class).getEmojis(this);
+    }
+
+    @Override
+    protected HashMap<String, String> executeServiceSync(RestAdapter restAdapter) {
         return restAdapter.create(EmojisService.class).getEmojis();
     }
+
 }

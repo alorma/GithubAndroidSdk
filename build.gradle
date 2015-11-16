@@ -86,16 +86,13 @@ dependencies {
     travisDebugCompile project(path: ':GitskariosCore', configuration: 'debug')
     travisReleaseCompile project(path: ':GitskariosCore', configuration: 'release')
   } catch (Exception e) {}
-  try {
-    compile project(path: ':GitskariosCore', configuration: 'release')
-  } catch (Exception e) {}
 }
 
 publish {
   userOrg = 'alorma'
   groupId = 'com.github.alorma'
   artifactId = 'github-sdk'
-  version = '2.0.0'
+  version = '1.5.0'
   description = 'A SDK for GitHub implemented in Android'
   website = 'https://github.com/gitskarios/GithubAndroidSdk'
   issueTracker = "${website}/issues"

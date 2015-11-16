@@ -3,14 +3,11 @@ package com.alorma.github.sdk.services.user;
 import android.content.Context;
 
 import com.alorma.github.sdk.bean.dto.response.User;
-import com.alorma.github.sdk.services.client.GithubClient;
-import retrofit.RestAdapter;
-import rx.Observable;
 
 /**
  * Created by Bernat on 12/07/2014.
  */
-public class RequestUserClient extends GithubClient<User> {
+public class RequestUserClient extends GithubUsersClient<User> {
 
     private String username;
 
@@ -20,7 +17,12 @@ public class RequestUserClient extends GithubClient<User> {
     }
 
     @Override
-    protected Observable<User> getApiObservable(RestAdapter restAdapter) {
-        return restAdapter.create(UsersService.class).getSingleUser(username);
+    protected void executeService(UsersService usersService) {
+        usersService.getSingleUser(username, this);
+    }
+
+    @Override
+    protected User executeServiceSync(UsersService usersService) {
+        return usersService.getSingleUser(username);
     }
 }

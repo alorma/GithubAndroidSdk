@@ -6,7 +6,6 @@ import com.alorma.github.sdk.bean.dto.response.Release;
 import com.alorma.github.sdk.bean.info.RepoInfo;
 import com.alorma.github.sdk.services.client.GithubClient;
 
-import com.alorma.github.sdk.services.client.GithubListClient;
 import java.util.List;
 
 import retrofit.RestAdapter;
@@ -14,7 +13,7 @@ import retrofit.RestAdapter;
 /**
  * Created by a557114 on 29/07/2015.
  */
-public class GetRepoReleasesClient extends GithubListClient<List<Release>> {
+public class GetRepoReleasesClient extends GithubClient<List<Release>> {
     private RepoInfo info;
     private int page;
 

@@ -7,7 +7,6 @@ import com.alorma.github.sdk.bean.dto.response.GithubComment;
 import com.alorma.github.sdk.services.client.GithubClient;
 
 import retrofit.RestAdapter;
-import rx.Observable;
 
 public class EditGistCommentClient extends GithubClient<GithubComment> {
 
@@ -23,7 +22,12 @@ public class EditGistCommentClient extends GithubClient<GithubComment> {
     }
 
     @Override
-    protected Observable<GithubComment> getApiObservable(RestAdapter restAdapter) {
+    protected void executeService(RestAdapter restAdapter) {
+        restAdapter.create(GistsService.class).editComment(gistId, commentId, body, this);
+    }
+
+    @Override
+    protected GithubComment executeServiceSync(RestAdapter restAdapter) {
         return restAdapter.create(GistsService.class).editComment(gistId, commentId, body);
     }
 }

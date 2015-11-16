@@ -1,16 +1,16 @@
 package com.alorma.github.sdk.services.repo.actions;
 
 import android.content.Context;
+
 import com.alorma.github.sdk.services.client.GithubClient;
+
 import retrofit.RestAdapter;
 import retrofit.client.Response;
-import rx.Observable;
-import rx.functions.Func1;
 
 /**
  * Created by Bernat on 07/08/2014.
  */
-public class CheckRepoWatchedClient extends GithubClient<Boolean> {
+public class CheckRepoWatchedClient extends GithubClient<Response> {
     private String repo;
     private String owner;
 
@@ -21,14 +21,12 @@ public class CheckRepoWatchedClient extends GithubClient<Boolean> {
     }
 
     @Override
-    protected Observable<Boolean> getApiObservable(RestAdapter restAdapter) {
-        return restAdapter.create(RepoActionsService.class)
-            .checkIfRepoIsWatched(owner, repo)
-            .map(new Func1<Response, Boolean>() {
-                @Override
-                public Boolean call(Response r) {
-                    return r != null && r.getStatus() == 204;
-                }
-            });
+    protected void executeService(RestAdapter restAdapter) {
+        restAdapter.create(RepoActionsService.class).checkIfRepoIsWatched(owner, repo, this);
+    }
+
+    @Override
+    protected Response executeServiceSync(RestAdapter restAdapter) {
+        return restAdapter.create(RepoActionsService.class).checkIfRepoIsWatched(owner, repo);
     }
 }

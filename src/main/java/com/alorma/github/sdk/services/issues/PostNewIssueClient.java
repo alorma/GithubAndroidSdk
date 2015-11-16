@@ -8,7 +8,6 @@ import com.alorma.github.sdk.bean.info.RepoInfo;
 import com.alorma.github.sdk.services.client.GithubClient;
 
 import retrofit.RestAdapter;
-import rx.Observable;
 
 /**
  * Created by Bernat on 23/08/2014.
@@ -26,7 +25,16 @@ public class PostNewIssueClient extends GithubClient<Issue> {
     }
 
     @Override
-    protected Observable<Issue> getApiObservable(RestAdapter restAdapter) {
+    protected void executeService(RestAdapter restAdapter) {
+        if (issue == null || issue.title == null) {
+            throw new RuntimeException("Issue or Issue title can not be null");
+        }
+        IssuesService service = restAdapter.create(IssuesService.class);
+        service.create(repoInfo.owner, repoInfo.name, issue, this);
+    }
+
+    @Override
+    protected Issue executeServiceSync(RestAdapter restAdapter) {
         if (issue == null || issue.title == null) {
             throw new RuntimeException("Issue or Issue title can not be null");
         }

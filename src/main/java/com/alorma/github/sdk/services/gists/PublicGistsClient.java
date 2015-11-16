@@ -5,12 +5,11 @@ import android.content.Context;
 import com.alorma.github.sdk.bean.dto.response.Gist;
 import com.alorma.github.sdk.services.client.GithubClient;
 
-import com.alorma.github.sdk.services.client.GithubListClient;
 import java.util.List;
 
 import retrofit.RestAdapter;
 
-public class PublicGistsClient extends GithubListClient<List<Gist>> {
+public class PublicGistsClient extends GithubClient<List<Gist>> {
     private int page = 0;
 
     public PublicGistsClient(Context context) {

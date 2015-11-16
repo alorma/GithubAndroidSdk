@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.github.alorma</groupId>
     <artifactId>github-sdk</artifactId>
-    <version>2.0.0</version>
+    <version>1.5.0</version>
     <packaging>apklib</packaging>
 
     <properties>
@@ -22,13 +22,13 @@
         <dependency>
             <groupId>com.github.alorma</groupId>
             <artifactId>gitskarios-core</artifactId>
-            <version>2.0.1</version>
+            <version>1.2.0</version>
             <type>apklib</type>
         </dependency>
         <dependency>
             <groupId>com.github.alorma</groupId>
             <artifactId>gitskarios-core</artifactId>
-            <version>2.0.1</version>
+            <version>1.2.0</version>
             <type>jar</type>
             <scope>provided</scope>
         </dependency>

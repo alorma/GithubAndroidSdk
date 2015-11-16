@@ -4,15 +4,18 @@ import java.util.HashMap;
 
 import retrofit.Callback;
 import retrofit.http.GET;
-import rx.Observable;
 
 /**
  * Created by Bernat on 08/07/2015.
  */
 public interface EmojisService {
 
+    // Async
+    @GET("/emojis")
+    void getEmojis(Callback<HashMap<String, String>> callback);
+
     // Sync
     @GET("/emojis")
-    Observable<HashMap<String, String>> getEmojis();
+    HashMap<String, String> getEmojis();
 
 }

@@ -4,13 +4,12 @@ import android.content.Context;
 
 import com.alorma.github.sdk.services.client.GithubClient;
 
-import com.alorma.github.sdk.services.client.GithubListClient;
 import retrofit.RestAdapter;
 
 /**
  * Created by Bernat on 08/08/2014.
  */
-public abstract class GithubSearchClient<K> extends GithubListClient<K> {
+public abstract class GithubSearchClient<K> extends GithubClient<K> {
     protected String query;
     private int page = 0;
 

@@ -12,7 +12,6 @@ import retrofit.http.GET;
 import retrofit.http.POST;
 import retrofit.http.Path;
 import retrofit.http.Query;
-import rx.Observable;
 
 /**
  * Created by Bernat on 07/09/2014.
@@ -62,7 +61,7 @@ public interface CommitsService {
 
     //Sync
     @GET("/repos/{owner}/{name}/commits/{sha}")
-    Observable<Commit> singleCommit(@Path("owner") String owner, @Path("name") String repo, @Path("sha") String sha);
+    Commit singleCommit(@Path("owner") String owner, @Path("name") String repo, @Path("sha") String sha);
 
     @GET("/repos/{owner}/{name}/commits/{sha}/comments")
     List<CommitComment> singleCommitComments(@Path("owner") String owner, @Path("name") String repo, @Path("sha") String sha);
@@ -96,6 +95,6 @@ public interface CommitsService {
     List<Commit> commitsByPath(@Path("owner") String owner, @Path("name") String repo, @Query("path") String path, @Query("sha") String sha, @Query("page") int page);
 
     @POST("/repos/{owner}/{name}/commits/{sha}/comments")
-    Observable<CommitComment> publishComment(@Path("owner") String owner, @Path("name") String repo, @Path("sha") String sha, @Body CommitCommentRequest request);
+    CommitComment publishComment(@Path("owner") String owner, @Path("name") String repo, @Path("sha") String sha, @Body CommitCommentRequest request);
 
 }

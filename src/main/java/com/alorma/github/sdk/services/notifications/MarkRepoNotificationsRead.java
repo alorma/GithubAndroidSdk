@@ -12,13 +12,11 @@ import org.joda.time.format.ISODateTimeFormat;
 
 import retrofit.RestAdapter;
 import retrofit.client.Response;
-import rx.Observable;
-import rx.functions.Func1;
 
 /**
  * Created by Bernat on 01/03/2015.
  */
-public class MarkRepoNotificationsRead extends GithubClient<Boolean> {
+public class MarkRepoNotificationsRead extends GithubClient<Response> {
 	private RepoInfo repoInfo;
 
 	public MarkRepoNotificationsRead(Context context, RepoInfo repoInfo) {
@@ -27,17 +25,19 @@ public class MarkRepoNotificationsRead extends GithubClient<Boolean> {
 	}
 
 	@Override
-	protected Observable<Boolean> getApiObservable(RestAdapter restAdapter) {
+	protected void executeService(RestAdapter restAdapter) {
 		DateTime dateTime = DateTime.now().withZone(DateTimeZone.UTC);
 		String date = ISODateTimeFormat.dateTime().print(dateTime);
 		LastDate lastDate = new LastDate(date);
-		return restAdapter.create(NotificationsService.class).markAsReadRepo(repoInfo.owner, repoInfo.name, lastDate)
-			.map(new Func1<Response, Boolean>() {
-				@Override
-				public Boolean call(Response response) {
-					return response != null && response.getStatus() == 204;
-				}
-			});
+		restAdapter.create(NotificationsService.class).markAsReadRepo(repoInfo.owner, repoInfo.name, lastDate, this);
+	}
+
+	@Override
+	protected Response executeServiceSync(RestAdapter restAdapter) {
+		DateTime dateTime = DateTime.now().withZone(DateTimeZone.UTC);
+		String date = ISODateTimeFormat.dateTime().print(dateTime);
+		LastDate lastDate = new LastDate(date);
+		return restAdapter.create(NotificationsService.class).markAsReadRepo(repoInfo.owner, repoInfo.name, lastDate);
 	}
 
 	@Override

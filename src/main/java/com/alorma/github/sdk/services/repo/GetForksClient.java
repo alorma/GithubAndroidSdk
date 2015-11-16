@@ -2,51 +2,45 @@ package com.alorma.github.sdk.services.repo;
 
 import android.content.Context;
 import android.support.annotation.StringDef;
+
 import com.alorma.github.sdk.bean.dto.response.Repo;
 import com.alorma.github.sdk.bean.info.RepoInfo;
-import com.alorma.github.sdk.services.client.GithubListClient;
+
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.List;
-import retrofit.RestAdapter;
 
 /**
  * Created by a557114 on 05/09/2015.
  */
-public class GetForksClient extends GithubListClient<List<Repo>> {
+public class GetForksClient extends GithubRepoClient<List<Repo>> {
 
-    private final Context context;
-    private final RepoInfo repoInfo;
     private final int page;
     private String sort = null;
 
     public GetForksClient(Context context, RepoInfo repoInfo) {
         this(context, repoInfo, 0);
     }
-
     public GetForksClient(Context context, RepoInfo repoInfo, int page) {
-        super(context);
-        this.context = context;
-        this.repoInfo = repoInfo;
+        super(context, repoInfo);
         this.page = page;
     }
+
     @Override
-    protected void executeService(RestAdapter restAdapter) {
-        RepoService repoService = restAdapter.create(RepoService.class);
+    protected void executeService(RepoService repoService) {
         if (page == 0) {
-            repoService.listForks(repoInfo.owner, repoInfo.name, sort, this);
+            repoService.listForks(getOwner(), getRepo(),sort, this);
         } else {
-            repoService.listForks(repoInfo.owner, repoInfo.name, sort, page, this);
+            repoService.listForks(getOwner(), getRepo(), sort, 0, this);
         }
     }
 
     @Override
-    protected List<Repo> executeServiceSync(RestAdapter restAdapter) {
-        RepoService repoService = restAdapter.create(RepoService.class);
+    protected List<Repo> executeServiceSync(RepoService repoService) {
         if (page == 0) {
-            return repoService.listForks(repoInfo.owner, repoInfo.name, sort);
+            return repoService.listForks(getOwner(), getRepo(), sort);
         } else {
-            return repoService.listForks(repoInfo.owner, repoInfo.name, sort, page);
+            return repoService.listForks(getOwner(), getRepo(), sort, 0);
         }
     }
 
