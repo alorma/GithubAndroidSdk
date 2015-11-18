@@ -5,6 +5,7 @@ import com.alorma.github.sdk.bean.dto.response.Commit;
 import com.alorma.github.sdk.bean.info.IssueInfo;
 import com.alorma.github.sdk.services.client.BaseInfiniteCallback;
 import com.alorma.github.sdk.services.client.GithubListClient;
+import com.alorma.gitskarios.core.client.BaseListClient;
 import java.util.List;
 import retrofit.RestAdapter;
 import rx.Observable;
@@ -29,24 +30,18 @@ public class GetPullRequestCommits extends GithubListClient<List<Commit>> {
     }
 
     @Override
-    protected void executeService(RestAdapter restAdapter) {
-        PullRequestsService pullRequestsService = restAdapter.create(PullRequestsService.class);
-        if (page == 0) {
-            pullRequestsService.commits(info.repoInfo.owner, info.repoInfo.name, info.num, this);
-        } else {
-            pullRequestsService.commits(info.repoInfo.owner, info.repoInfo.name, info.num,
-                nextPage, this);
-        }
-    }
-
-    @Override
-    protected List<Commit> executeServiceSync(RestAdapter restAdapter) {
-        PullRequestsService pullRequestsService = restAdapter.create(PullRequestsService.class);
-        if (page == 0) {
-            return pullRequestsService.commits(info.repoInfo.owner, info.repoInfo.name, info.num);
-        } else {
-            return pullRequestsService.commits(info.repoInfo.owner, info.repoInfo.name, info.num,
-                nextPage);
-        }
+    protected ApiSubscriber getApiObservable(RestAdapter restAdapter) {
+        return new ApiSubscriber() {
+            @Override
+            protected void call(RestAdapter restAdapter) {
+                PullRequestsService pullRequestsService = restAdapter.create(PullRequestsService.class);
+                if (page == 0) {
+                    pullRequestsService.commits(info.repoInfo.owner, info.repoInfo.name, info.num, this);
+                } else {
+                    pullRequestsService.commits(info.repoInfo.owner, info.repoInfo.name, info.num,
+                        nextPage, this);
+                }
+            }
+        };
     }
 }

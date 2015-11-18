@@ -1,14 +1,11 @@
 package com.alorma.github.sdk.services.client;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
 import android.util.Log;
 import com.alorma.github.sdk.security.GitHub;
-import com.alorma.github.sdk.security.InterceptingListOkClient;
 import com.alorma.gitskarios.core.ApiClient;
 import com.alorma.gitskarios.core.client.BaseListClient;
 import com.alorma.gitskarios.core.client.StoreCredentials;
-import com.squareup.okhttp.OkHttpClient;
 
 public abstract class GithubListClient<K> extends BaseListClient<K> {
 
@@ -35,11 +32,5 @@ public abstract class GithubListClient<K> extends BaseListClient<K> {
 
 	public String getAcceptHeader() {
 		return "application/vnd.github.v3.json";
-	}
-
-	@Nullable
-	@Override
-	protected InterceptingListOkClient getInterceptor() {
-		return new InterceptingListOkClient(new OkHttpClient(), this);
 	}
 }

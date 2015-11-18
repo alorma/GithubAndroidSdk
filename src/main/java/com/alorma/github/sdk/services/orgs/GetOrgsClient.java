@@ -5,6 +5,7 @@ import android.util.Pair;
 import com.alorma.github.sdk.bean.dto.response.Organization;
 import com.alorma.github.sdk.services.client.BaseInfiniteCallback;
 import com.alorma.github.sdk.services.client.GithubListClient;
+import com.alorma.gitskarios.core.client.BaseListClient;
 import com.alorma.gitskarios.core.client.StoreCredentials;
 import java.util.List;
 import retrofit.RestAdapter;
@@ -30,84 +31,29 @@ public class GetOrgsClient extends GithubListClient<List<Organization>> {
 	}
 
 	@Override
-	public Observable<? extends Pair<List<Organization>, Integer>> getApiObservable() {
-		return Observable.create(new BaseInfiniteCallback<List<Organization>>() {
+	protected ApiSubscriber getApiObservable(RestAdapter restAdapter) {
+		return new ApiSubscriber() {
 			@Override
-			public void execute() {
+			protected void call(RestAdapter restAdapter) {
 				StoreCredentials settings = new StoreCredentials(getContext());
 				if (username != null && username.equalsIgnoreCase(settings.getUserName())) {
 					username = null;
 				}
-				OrgsService orgsService = getRestAdapter().create(OrgsService.class);
-				if (username == null) {
-					orgsService.orgs(this);
+				OrgsService orgsService = restAdapter.create(OrgsService.class);
+				if (page == -1) {
+					if (username == null) {
+						orgsService.orgs(this);
+					} else {
+						orgsService.orgsByUser(username, this);
+					}
 				} else {
-					orgsService.orgsByUser(username, this);
+					if (username == null) {
+						orgsService.orgs(page, this);
+					} else {
+						orgsService.orgsByUser(username, page, this);
+					}
 				}
 			}
-
-			@Override
-			protected void executePaginated(int nextPage) {
-				StoreCredentials settings = new StoreCredentials(getContext());
-				if (username != null && username.equalsIgnoreCase(settings.getUserName())) {
-					username = null;
-				}
-				OrgsService orgsService = getRestAdapter().create(OrgsService.class);
-				if (username == null) {
-					orgsService.orgs(page, this);
-				} else {
-					orgsService.orgsByUser(username, page, this);
-				}
-			}
-		}).map(new Func1<List<Organization>, Pair<List<Organization>, Integer>>() {
-			@Override
-			public Pair<List<Organization>, Integer> call(List<Organization> organizations) {
-				return new Pair<>(organizations, null);
-			}
-		});
-	}
-
-	@Override
-	protected void executeService(RestAdapter restAdapter) {
-        StoreCredentials settings = new StoreCredentials(getContext());
-        if (username != null && username.equalsIgnoreCase(settings.getUserName())) {
-            username = null;
-        }
-		OrgsService orgsService = restAdapter.create(OrgsService.class);
-		if (page == -1) {
-			if (username == null) {
-				orgsService.orgs(this);
-			} else {
-				orgsService.orgsByUser(username, this);
-			}
-		} else {
-			if (username == null) {
-				orgsService.orgs(page, this);
-			} else {
-				orgsService.orgsByUser(username, page, this);
-			}
-		}
-	}
-
-	@Override
-	protected List<Organization> executeServiceSync(RestAdapter restAdapter) {
-		StoreCredentials settings = new StoreCredentials(getContext());
-		if (username != null && username.equalsIgnoreCase(settings.getUserName())) {
-			username = null;
-		}
-		OrgsService orgsService = restAdapter.create(OrgsService.class);
-		if (page == -1) {
-			if (username == null) {
-				return orgsService.orgs();
-			} else {
-				return orgsService.orgsByUser(username);
-			}
-		} else {
-			if (username == null) {
-				return orgsService.orgs(page);
-			} else {
-				return orgsService.orgsByUser(username, page);
-			}
-		}
+		};
 	}
 }

@@ -1,6 +1,7 @@
 package com.alorma.github.sdk.services.repo;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.util.Base64;
 import com.alorma.github.sdk.bean.dto.request.RequestMarkdownDTO;
 import com.alorma.github.sdk.bean.dto.response.Content;
@@ -32,22 +33,45 @@ public class GetReadmeContentsClient extends GithubRepoClient<String> {
             contentObservable = repoService.readme(getOwner(), getRepo(), getBranch());
         }
 
-        return contentObservable.flatMap(new Func1<Content, Observable<String>>() {
+        return contentObservable.filter(new Func1<Content, Boolean>() {
             @Override
-            public Observable<String> call(Content content) {
-                RequestMarkdownDTO requestMarkdownDTO = new RequestMarkdownDTO();
-                if ("base64".equals(content.encoding)) {
-                    byte[] data = Base64.decode(content.content, Base64.DEFAULT);
-                    try {
-                        content.content = new String(data, "UTF-8");
-                    } catch (UnsupportedEncodingException e) {
-                        e.printStackTrace();
-                    }
+            public Boolean call(Content content) {
+                return content != null && !TextUtils.isEmpty(content.content);
             }
-                GetMarkdownClient markdownClient =
-                    new GetMarkdownClient(context, requestMarkdownDTO);
-                return markdownClient.observable();
-        }
+        }).filter(new Func1<Content, Boolean>() {
+            @Override
+            public Boolean call(Content content) {
+                return "base64".equals(content.encoding);
+            }
+        }).map(new Func1<Content, String>() {
+            @Override
+            public String call(Content content) {
+                byte[] data = Base64.decode(content.content, Base64.DEFAULT);
+                try {
+                    content.content = new String(data, "UTF-8");
+                    return content.content;
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+                return "";
+            }
+        }).filter(new Func1<String, Boolean>() {
+            @Override
+            public Boolean call(String s) {
+                return !TextUtils.isEmpty(s);
+            }
+        }).map(new Func1<String, RequestMarkdownDTO>() {
+            @Override
+            public RequestMarkdownDTO call(String s) {
+                RequestMarkdownDTO requestMarkdownDTO = new RequestMarkdownDTO();
+                requestMarkdownDTO.text = s;
+                return requestMarkdownDTO;
+            }
+        }).flatMap(new Func1<RequestMarkdownDTO, Observable<String>>() {
+            @Override
+            public Observable<String> call(RequestMarkdownDTO requestMarkdownDTO) {
+                return new GetMarkdownClient(context, requestMarkdownDTO).observable();
+            }
         });
     }
 }

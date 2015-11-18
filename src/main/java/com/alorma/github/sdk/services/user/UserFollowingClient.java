@@ -4,12 +4,15 @@ import android.content.Context;
 
 import com.alorma.github.sdk.bean.dto.response.User;
 
+import com.alorma.github.sdk.services.client.GithubListClient;
+import com.alorma.gitskarios.core.client.BaseListClient;
 import java.util.List;
+import retrofit.RestAdapter;
 
 /**
  * Created by Bernat on 14/07/2014.
  */
-public class UserFollowingClient extends GithubUsersClient<List<User>> {
+public class UserFollowingClient extends GithubListClient<List<User>> {
 
     private String username;
     private int page = 0;
@@ -26,36 +29,25 @@ public class UserFollowingClient extends GithubUsersClient<List<User>> {
     }
 
     @Override
-    protected void executeService(UsersService usersService) {
-        if (page == 0) {
-            if (username == null) {
-                usersService.following(this);
-            } else {
-                usersService.following(username, this);
+    protected ApiSubscriber getApiObservable(RestAdapter restAdapter) {
+        return new ApiSubscriber() {
+            @Override
+            protected void call(RestAdapter restAdapter) {
+                UsersService usersService = restAdapter.create(UsersService.class);
+                if (page == 0) {
+                    if (username == null) {
+                        usersService.following(this);
+                    } else {
+                        usersService.following(username, this);
+                    }
+                } else {
+                    if (username == null) {
+                        usersService.following(page, this);
+                    } else {
+                        usersService.following(username, page, this);
+                    }
+                }
             }
-        } else {
-            if (username == null) {
-                usersService.following(page, this);
-            } else {
-                usersService.following(username, page, this);
-            }
-        }
-    }
-
-    @Override
-    protected List<User> executeServiceSync(UsersService usersService) {
-        if (page == 0) {
-            if (username == null) {
-                return usersService.following();
-            } else {
-                return usersService.following(username);
-            }
-        } else {
-            if (username == null) {
-                return usersService.following(page);
-            } else {
-                return usersService.following(username, page);
-            }
-        }
+        };
     }
 }

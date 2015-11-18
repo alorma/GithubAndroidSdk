@@ -5,6 +5,7 @@ import android.content.Context;
 import com.alorma.github.sdk.bean.dto.response.GithubStatusResponse;
 import com.alorma.github.sdk.bean.info.RepoInfo;
 import com.alorma.github.sdk.services.client.GithubListClient;
+import com.alorma.gitskarios.core.client.BaseListClient;
 import retrofit.RestAdapter;
 
 /**
@@ -28,23 +29,18 @@ public class GetShaCombinedStatus extends GithubListClient<GithubStatusResponse>
     }
 
     @Override
-    protected void executeService(RestAdapter restAdapter) {
-        RepoService repoService = restAdapter.create(RepoService.class);
-        if (page == 0) {
-            repoService.combinedStatusASync(getOwner(), getRepo(), ref, this);
-        } else {
-            repoService.combinedStatusASync(getOwner(), getRepo(), ref, page, this);
-        }
-    }
-
-    @Override
-    protected GithubStatusResponse executeServiceSync(RestAdapter restAdapter) {
-        RepoService repoService = restAdapter.create(RepoService.class);
-        if (page == 0) {
-            return repoService.combinedStatusSync(getOwner(), getRepo(), ref);
-        } else {
-            return repoService.combinedStatusSync(getOwner(), getRepo(), ref, page);
-        }
+    protected ApiSubscriber getApiObservable(RestAdapter restAdapter) {
+        return new ApiSubscriber() {
+            @Override
+            protected void call(RestAdapter restAdapter) {
+                RepoService repoService = restAdapter.create(RepoService.class);
+                if (page == 0) {
+                    repoService.combinedStatusASync(getOwner(), getRepo(), ref, this);
+                } else {
+                    repoService.combinedStatusASync(getOwner(), getRepo(), ref, page, this);
+                }
+            }
+        };
     }
 
     private String getOwner() {

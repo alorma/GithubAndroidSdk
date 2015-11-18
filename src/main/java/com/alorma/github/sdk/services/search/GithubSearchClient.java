@@ -1,16 +1,18 @@
 package com.alorma.github.sdk.services.search;
 
 import android.content.Context;
-
-import com.alorma.github.sdk.services.client.GithubClient;
-
+import com.alorma.github.sdk.bean.dto.response.User;
+import com.alorma.github.sdk.bean.dto.response.search.UsersSearch;
 import com.alorma.github.sdk.services.client.GithubListClient;
-import retrofit.RestAdapter;
+import java.util.List;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * Created by Bernat on 08/08/2014.
  */
-public abstract class GithubSearchClient<K> extends GithubListClient<K> {
+public abstract class GithubSearchClient<Search, K> extends GithubListClient<K> {
     protected String query;
     private int page = 0;
 
@@ -24,39 +26,22 @@ public abstract class GithubSearchClient<K> extends GithubListClient<K> {
         this.page = page;
     }
 
-    @Override
-    protected void executeService(RestAdapter restAdapter) {
-        executeSearch(restAdapter.create(SearchClient.class));
+    public int getPage() {
+        return page;
     }
 
-    @Override
-    protected K executeServiceSync(RestAdapter restAdapter) {
-        return executeSearchSync(restAdapter.create(SearchClient.class));
-    }
+    public abstract class SearchCallback implements Callback<Search> {
 
-    protected void executeSearch(SearchClient searchClient) {
-        if (page == 0) {
-            executeFirst(searchClient, query);
-        } else {
-            executePaginated(searchClient, query, page);
+        protected Callback<K> callback;
+
+        public SearchCallback(Callback<K> callback) {
+
+            this.callback = callback;
+        }
+
+        @Override
+        public void failure(RetrofitError error) {
+            callback.failure(error);
         }
     }
-
-    protected abstract void executeFirst(SearchClient searchClient, String query);
-
-    protected abstract void executePaginated(SearchClient searchClient, String query, int page);
-
-    protected K executeSearchSync(SearchClient searchClient) {
-        if (page == 0) {
-            return executeFirstSync(searchClient, query);
-        } else {
-            return executePaginatedSync(searchClient, query, page);
-        }
-    }
-
-    protected abstract K executeFirstSync(SearchClient searchClient, String query);
-
-    protected abstract K executePaginatedSync(SearchClient searchClient, String query, int page);
-
-
 }
