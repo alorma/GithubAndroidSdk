@@ -6,14 +6,16 @@ import com.alorma.github.sdk.bean.dto.response.Notification;
 import com.alorma.github.sdk.services.client.GithubClient;
 
 import com.alorma.github.sdk.services.client.GithubListClient;
+import com.alorma.gitskarios.core.client.BaseListClient;
 import java.util.List;
 
 import retrofit.RestAdapter;
+import rx.Observable;
 
 /**
  * Created by Bernat on 18/02/2015.
  */
-public class GetNotificationsClient extends GithubListClient<List<Notification>> {
+public class GetNotificationsClient extends GithubClient<List<Notification>> {
 
 	private String token;
 
@@ -26,18 +28,14 @@ public class GetNotificationsClient extends GithubListClient<List<Notification>>
 		this.token = token;
 	}
 
+
 	@Override
 	public String getToken() {
 		return token != null ? token : super.getToken();
 	}
 
 	@Override
-	protected void executeService(RestAdapter restAdapter) {
-		restAdapter.create(NotificationsService.class).getNotifications(this);
-	}
-
-	@Override
-	protected List<Notification> executeServiceSync(RestAdapter restAdapter) {
-		return  restAdapter.create(NotificationsService.class).getNotifications();
+	protected Observable<List<Notification>> getApiObservable(RestAdapter restAdapter) {
+		return restAdapter.create(NotificationsService.class).getNotifications();
 	}
 }

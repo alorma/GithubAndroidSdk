@@ -7,6 +7,7 @@ import com.alorma.github.sdk.bean.dto.response.User;
 import com.alorma.github.sdk.bean.info.RepoInfo;
 
 import com.alorma.github.sdk.services.client.GithubListClient;
+import com.alorma.gitskarios.core.client.BaseListClient;
 import java.util.List;
 import retrofit.RestAdapter;
 
@@ -29,39 +30,26 @@ public class GetRepoContentsClient extends GithubListClient<List<Content>> {
 	}
 
 	@Override
-	protected void executeService(RestAdapter restAdapter) {
-		RepoService repoService = restAdapter.create(RepoService.class);
-		if (path == null) {
-			if (getBranch() == null) {
-				repoService.contents(getOwner(), getRepo(), this);
-			} else {
-				repoService.contentsByRef(getOwner(), getRepo(), getBranch(), this);
+	protected ApiSubscriber getApiObservable(RestAdapter restAdapter) {
+		return new ApiSubscriber() {
+			@Override
+			protected void call(RestAdapter restAdapter) {
+				RepoService repoService = restAdapter.create(RepoService.class);
+				if (path == null) {
+					if (getBranch() == null) {
+						repoService.contents(getOwner(), getRepo(), this);
+					} else {
+						repoService.contentsByRef(getOwner(), getRepo(), getBranch(), this);
+					}
+				} else {
+					if (getBranch() == null) {
+						repoService.contents(getOwner(), getRepo(), path, this);
+					} else {
+						repoService.contentsByRef(getOwner(), getRepo(), path, getBranch(), this);
+					}
+				}
 			}
-		} else {
-			if (getBranch() == null) {
-				repoService.contents(getOwner(), getRepo(), path, this);
-			} else {
-				repoService.contentsByRef(getOwner(), getRepo(), path, getBranch(), this);
-			}
-		}
-	}
-
-	@Override
-	protected List<Content> executeServiceSync(RestAdapter restAdapter) {
-		RepoService repoService = restAdapter.create(RepoService.class);
-		if (path == null) {
-			if (getBranch() == null) {
-				return repoService.contents(getOwner(), getRepo());
-			} else {
-				return repoService.contentsByRef(getOwner(), getRepo(), getBranch());
-			}
-		} else {
-			if (getBranch() == null) {
-				return repoService.contents(getOwner(), getRepo(), path);
-			} else {
-				return repoService.contentsByRef(getOwner(), getRepo(), path, getBranch());
-			}
-		}
+		};
 	}
 
 	private String getOwner() {

@@ -9,13 +9,10 @@ import com.alorma.github.sdk.R;
 import com.alorma.github.sdk.bean.info.RepoInfo;
 import com.alorma.github.sdk.services.client.GithubClient;
 import com.alorma.github.sdk.utils.GitskariosSettings;
-import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
-import retrofit.client.Response;
 import rx.Observable;
 import rx.functions.Action1;
-import rx.functions.Func1;
 
 /**
  * Created by Bernat on 17/12/2014.

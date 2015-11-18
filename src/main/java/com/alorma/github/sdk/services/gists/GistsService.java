@@ -56,40 +56,6 @@ public interface GistsService {
 	void publicGistsList(@Query("page") int page, Callback<List<Gist>> callback);
 
 
-	@GET("/gists/starred")
-	List<Gist> userStarredGistsListSync();
-
-	@GET("/gists/starred")
-	List<Gist> userStarredGistsListSync(@Query("page") int page);
-
-	@GET("/gists/{id}/comments")
-	List<GithubComment> comments(@Path("id") String id);
-
-	@GET("/gists/{id}/comments")
-	List<GithubComment> comments(@Path("id") String id, @Query("page") int page);
-
-	@GET("/gists")
-	List<Gist> userGistsList();
-
-	@GET("/gists")
-	List<Gist> userGistsList(@Query("page") int page);
-
-	@GET("/users/{username}/gists")
-	List<Gist> userGistsList(@Path("username") String username);
-
-	@GET("/users/{username}/gists")
-	List<Gist> userGistsList(@Path("username") String username, @Query("page") int page);
-
-	@GET("/gists/public")
-	List<Gist> publicGistsList();
-
-	@GET("/gists/public")
-	List<Gist> publicGistsList(@Query("page") int page);
-
-
-
-
-
 
 	@GET("/gists/{id}")
 	Observable<Gist> gistDetail(@Path("id") String id);

@@ -4,6 +4,7 @@ import android.content.Context;
 import com.alorma.github.sdk.bean.dto.response.Issue;
 import com.alorma.github.sdk.bean.info.IssueInfo;
 import com.alorma.github.sdk.services.client.GithubListClient;
+import com.alorma.gitskarios.core.client.BaseListClient;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,41 +39,27 @@ public class GetIssuesClient extends GithubListClient<List<Issue>> {
 	}
 
 	@Override
-	protected void executeService(RestAdapter restAdapter) {
-		IssuesService issuesService = restAdapter.create(IssuesService.class);
-		if (page == 0) {
-			if (issueInfo != null) {
-				issuesService.issues(issueInfo.repoInfo.owner, issueInfo.repoInfo.name, filter,
-					this);
-			} else {
-				issuesService.issues(filter, this);
+	protected ApiSubscriber getApiObservable(RestAdapter restAdapter) {
+		return new ApiSubscriber() {
+			@Override
+			protected void call(RestAdapter restAdapter) {
+				IssuesService issuesService = restAdapter.create(IssuesService.class);
+				if (page == 0) {
+					if (issueInfo != null) {
+						issuesService.issues(issueInfo.repoInfo.owner, issueInfo.repoInfo.name, filter,
+							this);
+					} else {
+						issuesService.issues(filter, this);
+					}
+				} else {
+					if (issueInfo != null) {
+						issuesService.issues(issueInfo.repoInfo.owner, issueInfo.repoInfo.name, filter,
+							page, this);
+					} else {
+						issuesService.issues(filter, page, this);
+					}
+				}
 			}
-		} else {
-			if (issueInfo != null) {
-				issuesService.issues(issueInfo.repoInfo.owner, issueInfo.repoInfo.name, filter,
-					page, this);
-			} else {
-				issuesService.issues(filter, page, this);
-			}
-		}
-	}
-
-	@Override
-	protected List<Issue> executeServiceSync(RestAdapter restAdapter) {
-		IssuesService issuesService = restAdapter.create(IssuesService.class);
-		if (page == 0) {
-			if (issueInfo != null) {
-				return issuesService.issues(issueInfo.repoInfo.owner, issueInfo.repoInfo.name, filter);
-			} else {
-				return issuesService.issues(filter);
-			}
-		} else {
-			if (issueInfo != null) {
-				return issuesService.issues(issueInfo.repoInfo.owner, issueInfo.repoInfo.name, filter,
-					page);
-			} else {
-				return issuesService.issues(filter, page);
-			}
-		}
+		};
 	}
 }

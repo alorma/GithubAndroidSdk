@@ -8,6 +8,7 @@ import com.alorma.github.sdk.bean.info.IssueInfo;
 import com.alorma.github.sdk.services.client.GithubClient;
 
 import com.alorma.github.sdk.services.client.GithubListClient;
+import com.alorma.gitskarios.core.client.BaseListClient;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,26 +33,19 @@ public class PullRequestReviewCommentsClient extends GithubListClient<List<Revie
     }
 
     @Override
-    protected void executeService(RestAdapter restAdapter) {
-        PullRequestsService service = restAdapter.create(PullRequestsService.class);
+    protected ApiSubscriber getApiObservable(RestAdapter restAdapter) {
+        return new ApiSubscriber() {
+            @Override
+            protected void call(RestAdapter restAdapter) {
+                PullRequestsService service = restAdapter.create(PullRequestsService.class);
 
-        if (page == 0) {
-            service.reviewComments(info.repoInfo.owner, info.repoInfo.name, info.num, this);
-        } else {
-            service.reviewComments(info.repoInfo.owner, info.repoInfo.name, info.num, page, this);
-        }
-    }
-
-    @Override
-    protected List<ReviewComment> executeServiceSync(RestAdapter restAdapter) {
-        PullRequestsService service = restAdapter.create(PullRequestsService.class);
-
-        if (page == 0) {
-            return service.reviewComments(info.repoInfo.owner, info.repoInfo.name, info.num);
-        } else {
-            return service.reviewComments(info.repoInfo.owner, info.repoInfo.name, info.num, page);
-        }
-
+                if (page == 0) {
+                    service.reviewComments(info.repoInfo.owner, info.repoInfo.name, info.num, this);
+                } else {
+                    service.reviewComments(info.repoInfo.owner, info.repoInfo.name, info.num, page, this);
+                }
+            }
+        };
     }
 
     @Override

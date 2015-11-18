@@ -8,6 +8,7 @@ import com.alorma.github.sdk.bean.info.RepoInfo;
 import com.alorma.github.sdk.services.client.GithubClient;
 
 import com.alorma.github.sdk.services.client.GithubListClient;
+import com.alorma.gitskarios.core.client.BaseListClient;
 import java.util.List;
 
 import retrofit.RestAdapter;
@@ -34,70 +35,41 @@ public class ListCommitsClient extends GithubListClient<List<Commit>> {
     }
 
     @Override
-    protected void executeService(RestAdapter restAdapter) {
-        CommitsService commitsService = restAdapter.create(CommitsService.class);
-        if (path == null) {
-            if (info.sha == null) {
-                if (page == 0) {
-                    commitsService.commits(info.repoInfo.owner, info.repoInfo.name, this);
+    protected ApiSubscriber getApiObservable(RestAdapter restAdapter) {
+        return new ApiSubscriber() {
+            @Override
+            protected void call(RestAdapter restAdapter) {
+                CommitsService commitsService = restAdapter.create(CommitsService.class);
+                if (path == null) {
+                    if (info.sha == null) {
+                        if (page == 0) {
+                            commitsService.commits(info.repoInfo.owner, info.repoInfo.name, this);
+                        } else {
+                            commitsService.commits(info.repoInfo.owner, info.repoInfo.name, page, this);
+                        }
+                    } else {
+                        if (page == 0) {
+                            commitsService.commits(info.repoInfo.owner, info.repoInfo.name, info.sha, this);
+                        } else {
+                            commitsService.commits(info.repoInfo.owner, info.repoInfo.name, page, info.sha, this);
+                        }
+                    }
                 } else {
-                    commitsService.commits(info.repoInfo.owner, info.repoInfo.name, page, this);
-                }
-            } else {
-                if (page == 0) {
-                    commitsService.commits(info.repoInfo.owner, info.repoInfo.name, info.sha, this);
-                } else {
-                    commitsService.commits(info.repoInfo.owner, info.repoInfo.name, page, info.sha, this);
-                }
-            }
-        } else {
-            if (info.sha == null) {
-                if (page == 0) {
-                    commitsService.commitsByPath(info.repoInfo.owner, info.repoInfo.name, path, this);
-                } else {
-                    commitsService.commitsByPath(info.repoInfo.owner, info.repoInfo.name, path, page, this);
-                }
-            } else {
-                if (page == 0) {
-                    commitsService.commitsByPath(info.repoInfo.owner, info.repoInfo.name, path, info.sha, this);
-                } else {
-                    commitsService.commitsByPath(info.repoInfo.owner, info.repoInfo.name, path, info.sha, page, this);
-                }
-            }
-        }
-    }
-
-    @Override
-    protected List<Commit> executeServiceSync(RestAdapter restAdapter) {
-        CommitsService commitsService = restAdapter.create(CommitsService.class);
-        if (path == null) {
-            if (info.sha == null) {
-                if (page == 0) {
-                    return  commitsService.commits(info.repoInfo.owner, info.repoInfo.name);
-                } else {
-                    return  commitsService.commits(info.repoInfo.owner, info.repoInfo.name, page);
-                }
-            } else {
-                if (page == 0) {
-                    return commitsService.commits(info.repoInfo.owner, info.repoInfo.name, info.sha);
-                } else {
-                    return commitsService.commits(info.repoInfo.owner, info.repoInfo.name, page, info.sha);
+                    if (info.sha == null) {
+                        if (page == 0) {
+                            commitsService.commitsByPath(info.repoInfo.owner, info.repoInfo.name, path, this);
+                        } else {
+                            commitsService.commitsByPath(info.repoInfo.owner, info.repoInfo.name, path, page, this);
+                        }
+                    } else {
+                        if (page == 0) {
+                            commitsService.commitsByPath(info.repoInfo.owner, info.repoInfo.name, path, info.sha, this);
+                        } else {
+                            commitsService.commitsByPath(info.repoInfo.owner, info.repoInfo.name, path, info.sha, page, this);
+                        }
+                    }
                 }
             }
-        } else {
-            if (info.sha == null) {
-                if (page == 0) {
-                    return commitsService.commitsByPath(info.repoInfo.owner, info.repoInfo.name, path);
-                } else {
-                    return commitsService.commitsByPath(info.repoInfo.owner, info.repoInfo.name, path, page);
-                }
-            } else {
-                if (page == 0) {
-                    return commitsService.commitsByPath(info.repoInfo.owner, info.repoInfo.name, path, info.sha);
-                } else {
-                    return commitsService.commitsByPath(info.repoInfo.owner, info.repoInfo.name, path, info.sha, page);
-                }
-            }
-        }
+        };
     }
 }

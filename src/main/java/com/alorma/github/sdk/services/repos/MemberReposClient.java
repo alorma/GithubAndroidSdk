@@ -6,6 +6,7 @@ import com.alorma.github.sdk.bean.dto.response.Repo;
 import com.alorma.github.sdk.services.client.GithubClient;
 
 import com.alorma.github.sdk.services.client.GithubListClient;
+import com.alorma.gitskarios.core.client.BaseListClient;
 import java.util.List;
 
 import retrofit.RestAdapter;
@@ -28,22 +29,17 @@ public class MemberReposClient extends GithubListClient<List<Repo>> {
     }
 
     @Override
-    protected void executeService(RestAdapter restAdapter) {
-        ReposService reposService = restAdapter.create(ReposService.class);
-        if (page == 0) {
-            reposService.userMemberRepos(this);
-        } else {
-            reposService.userMemberRepos(page, this);
-        }
-    }
-
-    @Override
-    protected List<Repo> executeServiceSync(RestAdapter restAdapter) {
-        ReposService reposService = restAdapter.create(ReposService.class);
-        if (page == 0) {
-            return reposService.userMemberRepos();
-        } else {
-            return reposService.userMemberRepos(page);
-        }
+    protected ApiSubscriber getApiObservable(RestAdapter restAdapter) {
+        return new ApiSubscriber() {
+            @Override
+            protected void call(RestAdapter restAdapter) {
+                ReposService reposService = restAdapter.create(ReposService.class);
+                if (page == 0) {
+                    reposService.userMemberRepos(this);
+                } else {
+                    reposService.userMemberRepos(page, this);
+                }
+            }
+        };
     }
 }

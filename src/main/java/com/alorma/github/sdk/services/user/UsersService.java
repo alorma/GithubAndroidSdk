@@ -18,9 +18,6 @@ import rx.Observable;
  */
 public interface UsersService {
 
-	@GET("/user/emails")
-	void userEmails(Callback<List<Email>> callback);
-
 	// Followers
 	@GET("/user/followers")
 	void followers(Callback<List<User>> callback);
@@ -61,33 +58,7 @@ public interface UsersService {
 	Observable<User> getSingleUser(@Path("user") String user);
 
 	@GET("/user/emails")
-	List<Email> userEmails();
-
-	// Followers
-	@GET("/user/followers")
-	List<User> followers();
-
-	@GET("/users/{username}/followers")
-	List<User> followers(@Path("username") String username);
-
-	@GET("/user/followers")
-	List<User> followers(@Query("page") int page);
-
-	@GET("/users/{username}/followers")
-	List<User> followers(@Path("username") String username, @Query("page") int page);
-
-	// Following
-	@GET("/user/following")
-	List<User> following();
-
-	@GET("/users/{username}/following")
-	List<User> following(@Path("username") String username);
-
-	@GET("/user/following")
-	List<User> following(@Query("page") int page);
-
-	@GET("/users/{username}/following")
-	List<User> following(@Path("username") String username, @Query("page") int page);
+	Observable<List<Email>> userEmails();
 
 	@GET("/user")
 	Observable<User> me();
@@ -103,12 +74,4 @@ public interface UsersService {
 	@DELETE("/user/following/{username}")
 	Observable<Response> unfollowUser(@Path("username") String username);
 
-
-	//ORGS MEMBERS
-
-	@GET("/orgs/{org}/members")
-	List<User> orgMembers(@Path("org") String org);
-
-	@GET("/orgs/{org}/members")
-	List<User> orgMembers(@Path("org") String org, @Query("page") int page);
 }
