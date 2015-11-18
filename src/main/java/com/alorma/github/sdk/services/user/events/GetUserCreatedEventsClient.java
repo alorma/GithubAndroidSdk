@@ -7,6 +7,7 @@ import com.alorma.github.sdk.bean.dto.response.GithubEvent;
 import com.alorma.github.sdk.services.client.GithubClient;
 
 import com.alorma.github.sdk.services.client.GithubListClient;
+import com.alorma.gitskarios.core.client.BaseListClient;
 import java.util.List;
 
 import retrofit.RestAdapter;
@@ -27,20 +28,17 @@ public class GetUserCreatedEventsClient extends GithubListClient<List<GithubEven
     }
 
     @Override
-    protected void executeService(RestAdapter restAdapter) {
-        if (page == 0) {
-            restAdapter.create(EventsService.class).createdEvents(username, this);
-        } else {
-            restAdapter.create(EventsService.class).createdEvents(username, page, this);
-        }
-    }
-
-    @Override
-    protected List<GithubEvent> executeServiceSync(RestAdapter restAdapter) {
-        if (page == 0) {
-            return restAdapter.create(EventsService.class).createdEvents(username);
-        } else {
-            return restAdapter.create(EventsService.class).createdEvents(username, page);
-        }
+    protected ApiSubscriber getApiObservable(RestAdapter restAdapter) {
+        return new ApiSubscriber() {
+            @Override
+            protected void call(RestAdapter restAdapter) {
+                EventsService eventsService = restAdapter.create(EventsService.class);
+                if (page == 0) {
+                    eventsService.createdEvents(username, this);
+                } else {
+                    eventsService.createdEvents(username, page, this);
+                }
+            }
+        };
     }
 }

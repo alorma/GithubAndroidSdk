@@ -3,6 +3,7 @@ package com.alorma.github.sdk.services.orgs.teams;
 import android.content.Context;
 import com.alorma.github.sdk.bean.dto.response.User;
 import com.alorma.github.sdk.services.client.GithubListClient;
+import com.alorma.gitskarios.core.client.BaseListClient;
 import java.util.List;
 import retrofit.RestAdapter;
 
@@ -22,22 +23,17 @@ public class GetTeamMembersClient extends GithubListClient<List<User>> {
     }
 
     @Override
-    protected void executeService(RestAdapter restAdapter) {
-        TeamsService teamsService = restAdapter.create(TeamsService.class);
-        if (page == 0) {
-            teamsService.members(this.id, this);
-        } else {
-            teamsService.members(this.id, page, this);
-        }
-    }
-
-    @Override
-    protected List<User> executeServiceSync(RestAdapter restAdapter) {
-        TeamsService teamsService = restAdapter.create(TeamsService.class);
-        if (page == 0) {
-            return teamsService.members(this.id);
-        } else {
-            return teamsService.members(this.id, page);
-        }
+    protected ApiSubscriber getApiObservable(RestAdapter restAdapter) {
+        return new ApiSubscriber() {
+            @Override
+            protected void call(RestAdapter restAdapter) {
+                TeamsService teamsService = restAdapter.create(TeamsService.class);
+                if (page == 0) {
+                    teamsService.members(id, this);
+                } else {
+                    teamsService.members(id, page, this);
+                }
+            }
+        };
     }
 }

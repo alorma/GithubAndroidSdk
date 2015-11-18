@@ -7,6 +7,7 @@ import com.alorma.github.sdk.bean.info.RepoInfo;
 import com.alorma.github.sdk.services.client.GithubClient;
 
 import com.alorma.github.sdk.services.client.GithubListClient;
+import com.alorma.gitskarios.core.client.BaseListClient;
 import java.util.List;
 
 import retrofit.RestAdapter;
@@ -25,20 +26,16 @@ public class GetRepoReleasesClient extends GithubListClient<List<Release>> {
     }
 
     @Override
-    protected void executeService(RestAdapter restAdapter) {
-        if (page == 0) {
-            restAdapter.create(RepoService.class).releases(info.owner, info.name, this);
-        } else {
-            restAdapter.create(RepoService.class).releases(info.owner, info.name, page, this);
-        }
-    }
-
-    @Override
-    protected List<Release> executeServiceSync(RestAdapter restAdapter) {
-        if (page == 0) {
-            return restAdapter.create(RepoService.class).releases(info.owner, info.name);
-        } else {
-            return restAdapter.create(RepoService.class).releases(info.owner, info.name, page);
-        }
+    protected ApiSubscriber getApiObservable(RestAdapter restAdapter) {
+        return new ApiSubscriber() {
+            @Override
+            protected void call(RestAdapter restAdapter) {
+                if (page == 0) {
+                    restAdapter.create(RepoService.class).releases(info.owner, info.name, this);
+                } else {
+                    restAdapter.create(RepoService.class).releases(info.owner, info.name, page, this);
+                }
+            }
+        };
     }
 }

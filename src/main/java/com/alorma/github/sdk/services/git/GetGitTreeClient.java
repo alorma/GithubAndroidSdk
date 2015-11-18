@@ -20,11 +20,12 @@ public class GetGitTreeClient extends GithubClient<GitTree> {
 
     @Override
     protected Observable<GitTree> getApiObservable(RestAdapter restAdapter) {
+        GitDataService gitDataService = restAdapter.create(GitDataService.class);
         if (recursive) {
-            return restAdapter.create(GitDataService.class)
+            return gitDataService
                 .repoTreeRecursive(info.owner, info.name, info.branch);
         } else {
-            return restAdapter.create(GitDataService.class)
+            return gitDataService
                 .repoTree(info.owner, info.name, info.branch);
         }
     }

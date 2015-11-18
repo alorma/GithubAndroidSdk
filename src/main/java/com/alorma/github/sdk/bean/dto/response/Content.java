@@ -27,35 +27,17 @@ public class Content extends ShaUrl implements Comparable<Content> {
 	}
 
 	public boolean isSubmodule() {
-		return ContentType.submodule.equals(type);
+		return ContentType.symlink.equals(type);
 	}
-
 
 	@Override
 	public int compareTo(Content another) {
-		return Comparators.TYPE.compare(this, another);
-	}
-
-
-	public static class Comparators {
-		public static Comparator<Content> TYPE = new Comparator<Content>() {
-			@Override
-			public int compare(Content content, Content content2) {
-				if (content.type == ContentType.dir) {
-					if (content2.type == ContentType.dir) {
-						return content.name.compareTo(content2.name);
-					} else {
-						return -1;
-					}
-				} else if (content.type == ContentType.submodule) {
-					if (content2.type == ContentType.submodule) {
-						return 1;
-					} else {
-						return -1;
-					}
-				}
-				return content.name.compareTo(content2.name);
-			}
-		};
+		if (another.type == type) {
+			return another.path.compareTo(path);
+		} else if (another.type == ContentType.dir) {
+			return 1;
+		} else {
+			return another.path.compareTo(path);
+		}
 	}
 }

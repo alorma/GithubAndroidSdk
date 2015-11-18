@@ -20,8 +20,6 @@ import rx.Observable;
 public interface CommitsService {
 
     //Async
-    @GET("/repos/{owner}/{name}/commits/{sha}")
-    void singleCommit(@Path("owner") String owner, @Path("name") String repo, @Path("sha") String sha, Callback<Commit> callback);
 
     @GET("/repos/{owner}/{name}/commits/{sha}/comments")
     void singleCommitComments(@Path("owner") String owner, @Path("name") String repo, @Path("sha") String sha, Callback<List<CommitComment>> callback);
@@ -55,45 +53,9 @@ public interface CommitsService {
     void commitsByPath(@Path("owner") String owner, @Path("name") String repo, @Query("path") String path, @Query("sha") String sha, @Query("page") int page,
                        Callback<List<Commit>> callback);
 
-    @POST("/repos/{owner}/{name}/commits/{sha}/comments")
-    void publishComment(@Path("owner") String owner, @Path("name") String repo, @Path("sha") String sha, @Body CommitCommentRequest request,
-                        Callback<CommitComment> callback);
-
-
     //Sync
     @GET("/repos/{owner}/{name}/commits/{sha}")
     Observable<Commit> singleCommit(@Path("owner") String owner, @Path("name") String repo, @Path("sha") String sha);
-
-    @GET("/repos/{owner}/{name}/commits/{sha}/comments")
-    List<CommitComment> singleCommitComments(@Path("owner") String owner, @Path("name") String repo, @Path("sha") String sha);
-
-    @GET("/repos/{owner}/{name}/commits/{sha}/comments")
-    List<CommitComment> singleCommitComments(@Path("owner") String owner, @Path("name") String repo, @Path("sha") String sha, @Query("page") int page);
-
-
-    @GET("/repos/{owner}/{name}/commits")
-    List<Commit> commits(@Path("owner") String owner, @Path("name") String repo);
-
-    @GET("/repos/{owner}/{name}/commits")
-    List<Commit> commits(@Path("owner") String owner, @Path("name") String repo, @Query("page") int page);
-
-    @GET("/repos/{owner}/{name}/commits")
-    List<Commit> commits(@Path("owner") String owner, @Path("name") String repo, @Query("sha") String sha);
-
-    @GET("/repos/{owner}/{name}/commits")
-    List<Commit> commits(@Path("owner") String owner, @Path("name") String repo, @Query("page") int page, @Query("sha") String sha);
-
-    @GET("/repos/{owner}/{name}/commits")
-    List<Commit> commitsByPath(@Path("owner") String owner, @Path("name") String repo, @Query("path") String path);
-
-    @GET("/repos/{owner}/{name}/commits")
-    List<Commit> commitsByPath(@Path("owner") String owner, @Path("name") String repo, @Query("path") String path, @Query("page") int page);
-
-    @GET("/repos/{owner}/{name}/commits")
-    List<Commit> commitsByPath(@Path("owner") String owner, @Path("name") String repo, @Query("path") String path, @Query("sha") String sha);
-
-    @GET("/repos/{owner}/{name}/commits")
-    List<Commit> commitsByPath(@Path("owner") String owner, @Path("name") String repo, @Query("path") String path, @Query("sha") String sha, @Query("page") int page);
 
     @POST("/repos/{owner}/{name}/commits/{sha}/comments")
     Observable<CommitComment> publishComment(@Path("owner") String owner, @Path("name") String repo, @Path("sha") String sha, @Body CommitCommentRequest request);

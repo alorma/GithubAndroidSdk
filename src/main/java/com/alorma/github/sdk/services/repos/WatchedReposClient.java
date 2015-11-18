@@ -2,10 +2,6 @@ package com.alorma.github.sdk.services.repos;
 
 import android.content.Context;
 
-import com.alorma.github.sdk.bean.dto.response.Repo;
-
-import java.util.List;
-
 /**
  * Created by Bernat on 17/07/2014.
  */
@@ -24,44 +20,26 @@ public class WatchedReposClient extends GithubReposClient {
 	}
 
 	@Override
-	protected void executeUserFirstPage(String sort, ReposService usersService) {
-		usersService.userSubscribedReposList(sort, this);
+	protected void executeUserFirstPage(String sort, ReposService usersService,
+		ApiSubscriber apiSubscriber) {
+		usersService.userSubscribedReposList(sort, apiSubscriber);
 	}
 
 	@Override
-	protected void executeFirstPageByUsername(String username, String sort, ReposService usersService) {
-		usersService.userSubscribedReposList(username, sort, this);
+	protected void executeFirstPageByUsername(String username, String sort, ReposService usersService,
+		ApiSubscriber apiSubscriber) {
+		usersService.userSubscribedReposList(username, sort, apiSubscriber);
 	}
 
 	@Override
-	protected void executeUserPaginated(int page, String sort, ReposService usersService) {
-		usersService.userSubscribedReposList(page, sort, this);
+	protected void executeUserPaginated(int page, String sort, ReposService usersService,
+		ApiSubscriber apiSubscriber) {
+		usersService.userSubscribedReposList(page, sort, apiSubscriber);
 	}
 
 	@Override
-	protected void executePaginatedByUsername(String username, int page, String sort, ReposService usersService) {
-		usersService.userSubscribedReposList(username, page, sort, this);
+	protected void executePaginatedByUsername(String username, int page, String sort, ReposService usersService,
+		ApiSubscriber apiSubscriber) {
+		usersService.userSubscribedReposList(username, page, sort, apiSubscriber);
 	}
-
-	@Override
-	protected List<Repo> executeUserFirstPageSync(String sort, ReposService usersService) {
-		return usersService.userSubscribedReposList(sort);
-	}
-
-	@Override
-	protected List<Repo> executeFirstPageByUsernameSync(String username, String sort, ReposService usersService) {
-		return usersService.userSubscribedReposList(username, sort);
-	}
-
-	@Override
-	protected List<Repo> executeUserPaginatedSync(int page, String sort, ReposService usersService) {
-		return usersService.userSubscribedReposList(page, sort);
-	}
-
-	@Override
-	protected List<Repo> executePaginatedByUsernameSync(String username, int page, String sort, ReposService usersService) {
-		return usersService.userSubscribedReposList(username, page, sort);
-	}
-
-
 }
