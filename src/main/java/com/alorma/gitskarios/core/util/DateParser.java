@@ -9,13 +9,14 @@ public class DateParser {
 
     public static final String DATE_PATTERN = "yyyy-MM-dd'T'HH:mm:ss'Z'";
 
-    public long getMillisFromDateClearDay(String createdAt) {
+    public long getMillisFromDateClearDay(String date) {
+        if (date==null){
+            throw new NullPointerException("Date cannot be null :(");
+        }
         try {
             SimpleDateFormat sdf = new SimpleDateFormat(DATE_PATTERN);
-            Date date = sdf.parse(createdAt);
-
             GregorianCalendar calendar = new GregorianCalendar();
-            calendar.setTime(date);
+            calendar.setTime(sdf.parse(date));
 
             calendar.set(Calendar.YEAR, 1970);
             calendar.set(Calendar.MONTH, 0);
