@@ -11,6 +11,8 @@ import com.alorma.github.sdk.bean.issue.IssueStoryDetail;
 import com.alorma.github.sdk.bean.issue.IssueStoryEvent;
 import com.alorma.github.sdk.services.client.BaseInfiniteCallback;
 import com.alorma.github.sdk.services.client.GithubClient;
+import com.alorma.gitskarios.core.util.DateParser;
+
 import java.util.Collections;
 import java.util.List;
 import org.joda.time.DateTime;
@@ -45,17 +47,17 @@ public class IssueStoryLoader extends GithubClient<IssueStory> {
 
   private Observable<IssueStory> getIssueStory() {
     return Observable.zip(getIssueObservable(), getIssueDetailsObservable(),
-        new Func2<Issue, List<IssueStoryDetail>, IssueStory>() {
-          @Override
-          public IssueStory call(Issue issue, List<IssueStoryDetail> details) {
-            IssueStory issueStory = new IssueStory();
-            issueStory.issue = issue;
-            issueStory.details = details;
-            Collections.sort(issueStory.details,
-                IssueStoryComparators.ISSUE_STORY_DETAIL_COMPARATOR);
-            return issueStory;
-          }
-        });
+            new Func2<Issue, List<IssueStoryDetail>, IssueStory>() {
+              @Override
+              public IssueStory call(Issue issue, List<IssueStoryDetail> details) {
+                IssueStory issueStory = new IssueStory();
+                issueStory.issue = issue;
+                issueStory.details = details;
+                Collections.sort(issueStory.details,
+                        IssueStoryComparators.ISSUE_STORY_DETAIL_COMPARATOR);
+                return issueStory;
+              }
+            });
   }
 
   private Observable<Issue> getIssueObservable() {
@@ -74,25 +76,25 @@ public class IssueStoryLoader extends GithubClient<IssueStory> {
       @Override
       public void execute() {
         issueStoryService.comments(issueInfo.repoInfo.owner, issueInfo.repoInfo.name, issueInfo.num,
-            this);
+                this);
       }
 
       @Override
       protected void executePaginated(int nextPage) {
         issueStoryService.comments(issueInfo.repoInfo.owner, issueInfo.repoInfo.name, issueInfo.num,
-            this);
+                this);
       }
     });
   }
 
   private Observable<IssueStoryDetail> getCommentsDetailsObs() {
     return getCommentsObs().flatMap(githubComments -> Observable.from(githubComments)
-        .map((Func1<GithubComment, IssueStoryDetail>) githubComment -> {
-          long time = getMilisFromDateClearDay(githubComment.created_at);
-          IssueStoryComment detail = new IssueStoryComment(githubComment);
-          detail.created_at = time;
-          return detail;
-        }));
+            .map((Func1<GithubComment, IssueStoryDetail>) githubComment -> {
+              long time = new DateParser().getMilisFromDateClearDay(githubComment.created_at);
+              IssueStoryComment detail = new IssueStoryComment(githubComment);
+              detail.created_at = time;
+              return detail;
+            }));
   }
 
   private Observable<List<IssueEvent>> getEventsObs() {
@@ -100,34 +102,26 @@ public class IssueStoryLoader extends GithubClient<IssueStory> {
       @Override
       public void execute() {
         issueStoryService.events(issueInfo.repoInfo.owner, issueInfo.repoInfo.name, issueInfo.num,
-            this);
+                this);
       }
 
       @Override
       protected void executePaginated(int nextPage) {
         issueStoryService.events(issueInfo.repoInfo.owner, issueInfo.repoInfo.name, issueInfo.num,
-            nextPage, this);
+                nextPage, this);
       }
     });
   }
 
   private Observable<IssueStoryDetail> getEventDetailsObs() {
     return getEventsObs().flatMap(issueEvents -> Observable.from(issueEvents)
-        .filter(issueEvent -> validEvent(issueEvent.event))
-        .map((Func1<IssueEvent, IssueStoryDetail>) issueEvent -> {
-          long time = getMilisFromDateClearDay(issueEvent.created_at);
-          IssueStoryEvent detail = new IssueStoryEvent(issueEvent);
-          detail.created_at = time;
-          return detail;
-        }));
-  }
-
-  private long getMilisFromDateClearDay(String createdAt) {
-    DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
-
-    DateTime dt = formatter.parseDateTime(createdAt);
-
-    return dt.minuteOfDay().roundFloorCopy().getMillis();
+            .filter(issueEvent -> validEvent(issueEvent.event))
+            .map((Func1<IssueEvent, IssueStoryDetail>) issueEvent -> {
+              long time = new DateParser().getMilisFromDateClearDay(issueEvent.created_at);
+              IssueStoryEvent detail = new IssueStoryEvent(issueEvent);
+              detail.created_at = time;
+              return detail;
+            }));
   }
 
   private boolean validEvent(String event) {
