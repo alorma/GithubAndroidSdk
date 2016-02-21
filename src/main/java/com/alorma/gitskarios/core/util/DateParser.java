@@ -1,5 +1,6 @@
 package com.alorma.gitskarios.core.util;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -23,7 +24,7 @@ public class DateParser {
             calendar.set(Calendar.DAY_OF_MONTH, 1);
 
             return calendar.getTimeInMillis();
-        } catch (Exception e) {
+        } catch (ParseException e) {
             //TODO please, remove this clause :D
             return 0;
         }
