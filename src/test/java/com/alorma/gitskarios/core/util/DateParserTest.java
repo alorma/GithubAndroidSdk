@@ -22,10 +22,10 @@ public class DateParserTest {
     }
 
     @Test
-    public void shouldLaunchANPE_whenPassingBerniesValue() throws Exception {
-        String gitHubDate = "2016-02-21T18:22:06Z";
+    public void shouldGiveGoodValue_whenPassingBerniesValue() throws Exception {
+        String berniesDate = "2016-02-21T18:22:06Z";
 
-        long result = dateParser.getMilisFromDateClearDay(gitHubDate);
+        long result = dateParser.getMilisFromDateClearDay(berniesDate);
 
         assertThat(result).isEqualTo(62526000);
     }
