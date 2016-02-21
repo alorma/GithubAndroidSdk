@@ -9,7 +9,7 @@ public class DateParser {
 
     public static final String DATE_PATTERN = "yyyy-MM-dd'T'HH:mm:ss'Z'";
 
-    public long getMilisFromDateClearDay(String createdAt) {
+    public long getMillisFromDateClearDay(String createdAt) {
         try {
             SimpleDateFormat sdf = new SimpleDateFormat(DATE_PATTERN);
             Date date = sdf.parse(createdAt);

@@ -15,9 +15,7 @@ import com.alorma.gitskarios.core.util.DateParser;
 
 import java.util.Collections;
 import java.util.List;
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
+
 import retrofit.RestAdapter;
 import rx.Observable;
 import rx.functions.Func1;
@@ -90,7 +88,7 @@ public class IssueStoryLoader extends GithubClient<IssueStory> {
   private Observable<IssueStoryDetail> getCommentsDetailsObs() {
     return getCommentsObs().flatMap(githubComments -> Observable.from(githubComments)
             .map((Func1<GithubComment, IssueStoryDetail>) githubComment -> {
-              long time = new DateParser().getMilisFromDateClearDay(githubComment.created_at);
+              long time = new DateParser().getMillisFromDateClearDay(githubComment.created_at);
               IssueStoryComment detail = new IssueStoryComment(githubComment);
               detail.created_at = time;
               return detail;
@@ -117,7 +115,7 @@ public class IssueStoryLoader extends GithubClient<IssueStory> {
     return getEventsObs().flatMap(issueEvents -> Observable.from(issueEvents)
             .filter(issueEvent -> validEvent(issueEvent.event))
             .map((Func1<IssueEvent, IssueStoryDetail>) issueEvent -> {
-              long time = new DateParser().getMilisFromDateClearDay(issueEvent.created_at);
+              long time = new DateParser().getMillisFromDateClearDay(issueEvent.created_at);
               IssueStoryEvent detail = new IssueStoryEvent(issueEvent);
               detail.created_at = time;
               return detail;
