@@ -1,5 +1,19 @@
 language: android
-sudo: true
+
+branches:
+  only:
+    - develop
+    - /^v\.\d\.\d\.\d$/
+
+cache:
+  directories:
+    - $HOME/.m2
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
+    - $HOME/.gradle/native
+    - $HOME/.gradle/daemon
+    - $HOME/.gradle/caches/jars-1
+    - $HOME/.gradle/caches/2.10
 
 jdk:
   - oraclejdk8
@@ -7,15 +21,16 @@ jdk:
 android:
   components:
    - tools
-   - build-tools-23.0.2
-   - android-23
+   - build-tools-24.0.0
+   - android-24
    - extra-android-m2repository
   licenses:
    - android-sdk-license-.+
 
-branches:
-  only:
-   - develop
-   - master
+script: ./gradlew assemble
 
-script: ./gradlew assembleDebug
+deploy:
+  provider: script
+  script: ./gradlew bintrayUpload -PbintrayUser=alorma -PbintrayKey=$BINTRAY_KEY -PdryRun=false
+  on:
+   tags: true

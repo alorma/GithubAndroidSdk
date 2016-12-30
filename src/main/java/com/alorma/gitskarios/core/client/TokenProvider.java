@@ -5,15 +5,13 @@ package com.alorma.gitskarios.core.client;
  */
 public class TokenProvider {
 
-    private static TokenProviderInterface tokenProviderInterface;
+  private static TokenProviderInterface tokenProviderInterface;
 
-    public static void setTokenProviderInstance(TokenProviderInterface tokenProviderInterface) {
-        TokenProvider.tokenProviderInterface = tokenProviderInterface;
-    }
+  public static void setTokenProviderInstance(TokenProviderInterface tokenProviderInterface) {
+    TokenProvider.tokenProviderInterface = tokenProviderInterface;
+  }
 
-    public static TokenProviderInterface getInstance() {
-        return tokenProviderInterface;
-    }
-
-
+  public static TokenProviderInterface getInstance() {
+    return tokenProviderInterface;
+  }
 }

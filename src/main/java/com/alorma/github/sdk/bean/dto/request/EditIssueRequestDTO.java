@@ -8,19 +8,18 @@ import android.os.Parcelable;
  */
 public abstract class EditIssueRequestDTO implements Parcelable {
 
-    public EditIssueRequestDTO() {
-    }
+  public EditIssueRequestDTO() {
+  }
 
-    protected EditIssueRequestDTO(Parcel in) {
-    }
+  protected EditIssueRequestDTO(Parcel in) {
+  }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
+  @Override
+  public int describeContents() {
+    return 0;
+  }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-    }
-
+  @Override
+  public void writeToParcel(Parcel dest, int flags) {
+  }
 }

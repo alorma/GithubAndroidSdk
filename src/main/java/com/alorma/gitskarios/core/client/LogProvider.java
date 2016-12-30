@@ -5,15 +5,13 @@ package com.alorma.gitskarios.core.client;
  */
 public class LogProvider {
 
-    private static LogProviderInterface logProviderInterface;
+  private static LogProviderInterface logProviderInterface;
 
-    public static void setTokenProviderInstance(LogProviderInterface logProviderInterface) {
-        LogProvider.logProviderInterface = logProviderInterface;
-    }
+  public static void setTokenProviderInstance(LogProviderInterface logProviderInterface) {
+    LogProvider.logProviderInterface = logProviderInterface;
+  }
 
-    public static LogProviderInterface getInstance() {
-        return logProviderInterface;
-    }
-
-
+  public static LogProviderInterface getInstance() {
+    return logProviderInterface;
+  }
 }

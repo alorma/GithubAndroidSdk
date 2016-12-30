@@ -8,40 +8,40 @@ import android.os.Parcelable;
  */
 public class ReleaseInfo implements Parcelable {
 
-    public static final Creator<ReleaseInfo> CREATOR = new Creator<ReleaseInfo>() {
-        public ReleaseInfo createFromParcel(Parcel source) {
-            return new ReleaseInfo(source);
-        }
-
-        public ReleaseInfo[] newArray(int size) {
-            return new ReleaseInfo[size];
-        }
-    };
-    public RepoInfo repoInfo;
-    public int num;
-
-    public ReleaseInfo(RepoInfo repoInfo) {
-        this.repoInfo = repoInfo;
+  public static final Creator<ReleaseInfo> CREATOR = new Creator<ReleaseInfo>() {
+    public ReleaseInfo createFromParcel(Parcel source) {
+      return new ReleaseInfo(source);
     }
 
-    protected ReleaseInfo(Parcel in) {
-        this.repoInfo = in.readParcelable(RepoInfo.class.getClassLoader());
-        this.num = in.readInt();
+    public ReleaseInfo[] newArray(int size) {
+      return new ReleaseInfo[size];
     }
+  };
+  public RepoInfo repoInfo;
+  public int num;
 
-    @Override
-    public String toString() {
-        return repoInfo.toString() + " #" + num;
-    }
+  public ReleaseInfo(RepoInfo repoInfo) {
+    this.repoInfo = repoInfo;
+  }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
+  protected ReleaseInfo(Parcel in) {
+    this.repoInfo = in.readParcelable(RepoInfo.class.getClassLoader());
+    this.num = in.readInt();
+  }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeParcelable(this.repoInfo, 0);
-        dest.writeInt(this.num);
-    }
+  @Override
+  public String toString() {
+    return repoInfo.toString() + " #" + num;
+  }
+
+  @Override
+  public int describeContents() {
+    return 0;
+  }
+
+  @Override
+  public void writeToParcel(Parcel dest, int flags) {
+    dest.writeParcelable(this.repoInfo, 0);
+    dest.writeInt(this.num);
+  }
 }

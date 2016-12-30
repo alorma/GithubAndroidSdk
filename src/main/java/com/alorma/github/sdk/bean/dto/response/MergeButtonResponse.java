@@ -8,36 +8,36 @@ import android.os.Parcelable;
  */
 public class MergeButtonResponse extends ShaUrl implements Parcelable {
 
-    public static final Creator<MergeButtonResponse> CREATOR = new Creator<MergeButtonResponse>() {
-        public MergeButtonResponse createFromParcel(Parcel source) {
-            return new MergeButtonResponse(source);
-        }
-
-        public MergeButtonResponse[] newArray(int size) {
-            return new MergeButtonResponse[size];
-        }
-    };
-    public Boolean merged;
-    public String message;
-
-    public MergeButtonResponse() {
+  public static final Creator<MergeButtonResponse> CREATOR = new Creator<MergeButtonResponse>() {
+    public MergeButtonResponse createFromParcel(Parcel source) {
+      return new MergeButtonResponse(source);
     }
 
-    protected MergeButtonResponse(Parcel in) {
-        super(in);
-        this.merged = (Boolean) in.readValue(Boolean.class.getClassLoader());
-        this.message = in.readString();
+    public MergeButtonResponse[] newArray(int size) {
+      return new MergeButtonResponse[size];
     }
+  };
+  public Boolean merged;
+  public String message;
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
+  public MergeButtonResponse() {
+  }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        super.writeToParcel(dest, flags);
-        dest.writeValue(this.merged);
-        dest.writeString(this.message);
-    }
+  protected MergeButtonResponse(Parcel in) {
+    super(in);
+    this.merged = (Boolean) in.readValue(Boolean.class.getClassLoader());
+    this.message = in.readString();
+  }
+
+  @Override
+  public int describeContents() {
+    return 0;
+  }
+
+  @Override
+  public void writeToParcel(Parcel dest, int flags) {
+    super.writeToParcel(dest, flags);
+    dest.writeValue(this.merged);
+    dest.writeString(this.message);
+  }
 }

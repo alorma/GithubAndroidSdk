@@ -1,7 +1,6 @@
 package com.alorma.github.sdk.services.gtignore;
 
 import com.alorma.github.sdk.bean.dto.response.GitIgnoreTemplates;
-
 import retrofit.http.GET;
 import rx.Observable;
 
@@ -10,7 +9,7 @@ import rx.Observable;
  */
 public interface GitIgnoreService {
 
-    //Sync
-    @GET("/gitignore/templates")
-    Observable<GitIgnoreTemplates> list();
+  //Sync
+  @GET("/gitignore/templates")
+  Observable<GitIgnoreTemplates> list();
 }

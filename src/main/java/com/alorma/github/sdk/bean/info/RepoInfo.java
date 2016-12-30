@@ -2,7 +2,6 @@ package com.alorma.github.sdk.bean.info;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-
 import com.alorma.github.sdk.bean.dto.response.Permissions;
 
 /**
@@ -10,45 +9,45 @@ import com.alorma.github.sdk.bean.dto.response.Permissions;
  */
 public class RepoInfo implements Parcelable {
 
-    public static final Creator<RepoInfo> CREATOR = new Creator<RepoInfo>() {
-        public RepoInfo createFromParcel(Parcel source) {
-            return new RepoInfo(source);
-        }
-
-        public RepoInfo[] newArray(int size) {
-            return new RepoInfo[size];
-        }
-    };
-    public String owner;
-    public String name;
-    public String branch;
-    public Permissions permissions = new Permissions();
-
-    public RepoInfo() {
+  public static final Creator<RepoInfo> CREATOR = new Creator<RepoInfo>() {
+    public RepoInfo createFromParcel(Parcel source) {
+      return new RepoInfo(source);
     }
 
-    protected RepoInfo(Parcel in) {
-        this.owner = in.readString();
-        this.name = in.readString();
-        this.branch = in.readString();
-        this.permissions = in.readParcelable(Permissions.class.getClassLoader());
+    public RepoInfo[] newArray(int size) {
+      return new RepoInfo[size];
     }
+  };
+  public String owner;
+  public String name;
+  public String branch;
+  public Permissions permissions = new Permissions();
 
-    @Override
-    public String toString() {
-        return owner + "/" + name;
-    }
+  public RepoInfo() {
+  }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
+  protected RepoInfo(Parcel in) {
+    this.owner = in.readString();
+    this.name = in.readString();
+    this.branch = in.readString();
+    this.permissions = in.readParcelable(Permissions.class.getClassLoader());
+  }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.owner);
-        dest.writeString(this.name);
-        dest.writeString(this.branch);
-        dest.writeParcelable(this.permissions, 0);
-    }
+  @Override
+  public String toString() {
+    return owner + "/" + name;
+  }
+
+  @Override
+  public int describeContents() {
+    return 0;
+  }
+
+  @Override
+  public void writeToParcel(Parcel dest, int flags) {
+    dest.writeString(this.owner);
+    dest.writeString(this.name);
+    dest.writeString(this.branch);
+    dest.writeParcelable(this.permissions, 0);
+  }
 }

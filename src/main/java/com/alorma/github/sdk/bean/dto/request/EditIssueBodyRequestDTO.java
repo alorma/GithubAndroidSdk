@@ -7,31 +7,32 @@ import android.os.Parcelable;
  * Created by Bernat on 17/05/2015.
  */
 public class EditIssueBodyRequestDTO extends EditIssueRequestDTO implements Parcelable {
-    public static final Parcelable.Creator<EditIssueBodyRequestDTO> CREATOR = new Parcelable.Creator<EditIssueBodyRequestDTO>() {
+  public static final Parcelable.Creator<EditIssueBodyRequestDTO> CREATOR =
+      new Parcelable.Creator<EditIssueBodyRequestDTO>() {
         public EditIssueBodyRequestDTO createFromParcel(Parcel source) {
-            return new EditIssueBodyRequestDTO(source);
+          return new EditIssueBodyRequestDTO(source);
         }
 
         public EditIssueBodyRequestDTO[] newArray(int size) {
-            return new EditIssueBodyRequestDTO[size];
+          return new EditIssueBodyRequestDTO[size];
         }
-    };
-    public String body;
+      };
+  public String body;
 
-    public EditIssueBodyRequestDTO() {
-    }
+  public EditIssueBodyRequestDTO() {
+  }
 
-    protected EditIssueBodyRequestDTO(Parcel in) {
-        this.body = in.readString();
-    }
+  protected EditIssueBodyRequestDTO(Parcel in) {
+    this.body = in.readString();
+  }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
+  @Override
+  public int describeContents() {
+    return 0;
+  }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.body);
-    }
+  @Override
+  public void writeToParcel(Parcel dest, int flags) {
+    dest.writeString(this.body);
+  }
 }

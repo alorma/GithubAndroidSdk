@@ -6,11 +6,11 @@ import com.alorma.github.sdk.bean.dto.response.User;
  * Created by Bernat on 07/04/2015.
  */
 public interface IssueStoryDetail {
-    boolean isList();
+  boolean isList();
 
-    String getType();
+  String getType();
 
-    long createdAt();
+  long createdAt();
 
-    User user();
+  User user();
 }

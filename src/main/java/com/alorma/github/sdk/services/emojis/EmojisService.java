@@ -1,7 +1,6 @@
 package com.alorma.github.sdk.services.emojis;
 
 import java.util.HashMap;
-
 import retrofit.http.GET;
 import rx.Observable;
 
@@ -10,7 +9,7 @@ import rx.Observable;
  */
 public interface EmojisService {
 
-    // Sync
-    @GET("/emojis")
-    Observable<HashMap<String, String>> getEmojis();
+  // Sync
+  @GET("/emojis")
+  Observable<HashMap<String, String>> getEmojis();
 }

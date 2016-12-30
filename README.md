@@ -1,3 +1,7 @@
+# DEPRECATED
+
+
+
 [![Build Status](https://travis-ci.org/gitskarios/GithubAndroidSdk.svg)](https://travis-ci.org/gitskarios/GithubAndroidSdk)
 
 [ ![Download](https://api.bintray.com/packages/alorma/maven/github-sdk/images/download.svg) ](https://bintray.com/alorma/maven/github-sdk/_latestVersion)
@@ -40,7 +44,7 @@ maven {
 Add dependency in your project `build.gradle`
 
 ``` groovy
-    compile 'com.github.alorma:github-sdk:3.1.2'
+    compile 'com.github.alorma:github-sdk:3.2.5'
 ```
 
 Or grab it via maven
@@ -48,14 +52,14 @@ Or grab it via maven
 <dependency>
     <groupId>com.github.alorma</groupId>
     <artifactId>github-sdk</artifactId>
-    <version>3.1.2</version>
+    <version>3.2.2</version>
     <type>apklib</type>
     <scope>compile</scope>
 </dependency>
 <dependency>
     <groupId>com.github.alorma</groupId>
     <artifactId>github-sdk</artifactId>
-    <version>3.1.2</version>
+    <version>3.2.2</version>
     <type>jar</type>
     <scope>provided</scope>
 </dependency>
@@ -98,14 +102,19 @@ Or grab it via maven
 Get repositories list:
 ```java
 GithubReposClient client = new UserReposClient(getActivity(), username);
-client.setOnResultCallback(callback);
-client.execute();
+client.observable()
+.observeOn(AndroidSchedulers.mainThread()
+.subscribeOn(Schedulers.io())
+.subscribe( ... );
 ```
 
 Paginated:
 ```java
 UserReposClient client = new UserReposClient(getActivity(), username, page);
-client.executeSync();
+client.observable()
+.observeOn(AndroidSchedulers.mainThread()
+.subscribeOn(Schedulers.io())
+.subscribe( ... );
 ```
 
 ##LICENSE

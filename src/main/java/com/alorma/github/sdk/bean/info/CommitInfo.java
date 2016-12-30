@@ -8,35 +8,35 @@ import android.os.Parcelable;
  */
 public class CommitInfo implements Parcelable {
 
-    public static final Creator<CommitInfo> CREATOR = new Creator<CommitInfo>() {
-        public CommitInfo createFromParcel(Parcel source) {
-            return new CommitInfo(source);
-        }
-
-        public CommitInfo[] newArray(int size) {
-            return new CommitInfo[size];
-        }
-    };
-    public RepoInfo repoInfo;
-    public String sha;
-
-    public CommitInfo() {
-
+  public static final Creator<CommitInfo> CREATOR = new Creator<CommitInfo>() {
+    public CommitInfo createFromParcel(Parcel source) {
+      return new CommitInfo(source);
     }
 
-    protected CommitInfo(Parcel in) {
-        this.repoInfo = in.readParcelable(RepoInfo.class.getClassLoader());
-        this.sha = in.readString();
+    public CommitInfo[] newArray(int size) {
+      return new CommitInfo[size];
     }
+  };
+  public RepoInfo repoInfo;
+  public String sha;
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
+  public CommitInfo() {
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeParcelable(this.repoInfo, 0);
-        dest.writeString(this.sha);
-    }
+  }
+
+  protected CommitInfo(Parcel in) {
+    this.repoInfo = in.readParcelable(RepoInfo.class.getClassLoader());
+    this.sha = in.readString();
+  }
+
+  @Override
+  public int describeContents() {
+    return 0;
+  }
+
+  @Override
+  public void writeToParcel(Parcel dest, int flags) {
+    dest.writeParcelable(this.repoInfo, 0);
+    dest.writeString(this.sha);
+  }
 }

@@ -5,9 +5,9 @@ package com.alorma.gitskarios.core.client;
  */
 public enum RelType {
 
-    next,
-    last,
-    first,
-    prev
+  next,
+  last,
+  first,
+  prev
 
 }

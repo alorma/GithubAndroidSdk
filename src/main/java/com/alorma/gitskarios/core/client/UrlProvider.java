@@ -5,14 +5,13 @@ package com.alorma.gitskarios.core.client;
  */
 public class UrlProvider {
 
-    private static UrlProviderInterface urlProviderInterface;
+  private static UrlProviderInterface urlProviderInterface;
 
-    public static void setUrlProviderInstance(UrlProviderInterface urlProviderInterface) {
-        UrlProvider.urlProviderInterface = urlProviderInterface;
-    }
+  public static void setUrlProviderInstance(UrlProviderInterface urlProviderInterface) {
+    UrlProvider.urlProviderInterface = urlProviderInterface;
+  }
 
-    public static UrlProviderInterface getInstance() {
-        return urlProviderInterface;
-    }
-
+  public static UrlProviderInterface getInstance() {
+    return urlProviderInterface;
+  }
 }
